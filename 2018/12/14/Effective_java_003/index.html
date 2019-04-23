@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>【Effective java第二版整理】第三条： 用私有构造器或者枚举类型强化Singleton属性 | Edward</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Effective java,java书籍,学习">
+    <meta name="description" content="Singleton指仅仅被实例化一次的类。Singleton通常被用来代表那些本质上唯一的系统组件。   实现单例模式常见有三种方式： 静态成员 ：  1234567891011121314151617package Singleton强化;public class Elvis &amp;#123;    public  static final  Elvis INSTANCE=new Elvis()">
+<meta name="keywords" content="Effective java,java书籍,学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Effective java第二版整理】第三条： 用私有构造器或者枚举类型强化Singleton属性">
+<meta property="og:url" content="http://yoursite.com/2018/12/14/Effective_java_003/index.html">
+<meta property="og:site_name" content="Edward">
+<meta property="og:description" content="Singleton指仅仅被实例化一次的类。Singleton通常被用来代表那些本质上唯一的系统组件。   实现单例模式常见有三种方式： 静态成员 ：  1234567891011121314151617package Singleton强化;public class Elvis &amp;#123;    public  static final  Elvis INSTANCE=new Elvis()">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-23T05:51:53.522Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【Effective java第二版整理】第三条： 用私有构造器或者枚举类型强化Singleton属性">
+<meta name="twitter:description" content="Singleton指仅仅被实例化一次的类。Singleton通常被用来代表那些本质上唯一的系统组件。   实现单例模式常见有三种方式： 静态成员 ：  1234567891011121314151617package Singleton强化;public class Elvis &amp;#123;    public  static final  Elvis INSTANCE=new Elvis()">
+    
+        <link rel="alternate" type="application/atom+xml" title="Edward" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/123.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Edward</h5>
+          <a href="mailto:zqmssbd@qq.com" title="zqmssbd@qq.com" class="mail">zqmssbd@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/zqmssbd" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/5333276247" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://gitee.com/Edward_Zeng" target="_blank">
+                <i class="icon icon-lg icon-link"></i>
+                码云
+              </a>
+            </li>
+        
+      </ul>
+      <div>
+          <iframe frameborder="yes" border="80" marginwidth="80" marginheight="80" width="242" height="84" src="//music.163.com/outchain/player?type=2&id=2117005&auto=0&height=66"></iframe>
+      </div>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">【Effective java第二版整理】第三条： 用私有构造器或者枚举类型强化Singleton属性</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">【Effective java第二版整理】第三条： 用私有构造器或者枚举类型强化Singleton属性</h1>
+        <h5 class="title">你真的还不够，不够勤奋和努力。</h5>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-12-14T08:33:49.000Z" itemprop="datePublished" class="page-time">
+  2018-12-14
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Effective-java/">Effective java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#静态成员-："><span class="post-toc-number">1.</span> <span class="post-toc-text">静态成员 ：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#静态工厂方法"><span class="post-toc-number">2.</span> <span class="post-toc-text">静态工厂方法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#单元素枚举类型"><span class="post-toc-number">3.</span> <span class="post-toc-text">单元素枚举类型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">4.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Effective_java_003" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">【Effective java第二版整理】第三条： 用私有构造器或者枚举类型强化Singleton属性</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-12-14 16:33:49" datetime="2018-12-14T08:33:49.000Z" itemprop="datePublished">2018-12-14</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Effective-java/">Effective java</a></li></ul>
+
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>  Singleton指仅仅被实例化一次的类。Singleton通常被用来代表那些本质上唯一的系统组件。</p>
+<p>  实现单例模式常见有三种方式：</p>
+<h2 id="静态成员-："><a href="#静态成员-：" class="headerlink" title="静态成员 ："></a>静态成员 ：</h2>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">package Singleton强化;</span><br><span class="line"></span><br><span class="line">public class Elvis &#123;</span><br><span class="line">    public  static final  Elvis INSTANCE=new Elvis();</span><br><span class="line"></span><br><span class="line">    private <span class="function"><span class="title">Elvis</span></span>() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void <span class="function"><span class="title">leaveTheBuilding</span></span>()&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello!..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Elvis elvis=new Elvis();</span><br><span class="line">        elvis.leaveTheBuilding();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="静态工厂方法"><a href="#静态工厂方法" class="headerlink" title="静态工厂方法"></a>静态工厂方法</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">package Singleton强化;</span><br><span class="line"></span><br><span class="line">public class Elvis1 &#123;</span><br><span class="line"></span><br><span class="line">    private static final Elvis1 INSTANCE =new Elvis1();</span><br><span class="line">    private <span class="function"><span class="title">Elvis1</span></span>()&#123;&#125;;</span><br><span class="line">    public static Elvis1 <span class="function"><span class="title">getInstance</span></span>()&#123;<span class="built_in">return</span> INSTANCE;&#125;;</span><br><span class="line">    public void <span class="function"><span class="title">leaveTheBuilding</span></span>()&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello!..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Elvis1 elvis1=Elvis1.getInstance();</span><br><span class="line">        elvis1.leaveTheBuilding();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是这两种方式不能完全保证全局唯一对象。享有特权的客户端可以借助反射机制设置AccessibleObject.setAccessible(ture)，改变构造器访问属性，调用私有构造器。让它在被要求创建第二个实例的时候抛出异常。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">package Singleton强化;</span><br><span class="line"></span><br><span class="line">import java.lang.reflect.Constructor;</span><br><span class="line">import java.lang.reflect.InvocationTargetException;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 第二次创建实例的时候抛出异常。</span><br><span class="line"> */</span><br><span class="line">public class Elvis1 &#123;</span><br><span class="line">    private  static int count=0; //记录创建次数</span><br><span class="line">    private static final Elvis1 INSTANCE =new Elvis1();</span><br><span class="line">    private <span class="function"><span class="title">Elvis1</span></span>()&#123;</span><br><span class="line">        <span class="keyword">if</span> (count&gt;0)&#123;</span><br><span class="line">            throw new IllegalArgumentException(<span class="string">"Cannot create Elvis1 twice"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">    public static Elvis1 <span class="function"><span class="title">getInstance</span></span>()&#123;<span class="built_in">return</span> INSTANCE;&#125;;</span><br><span class="line">    public void <span class="function"><span class="title">leaveTheBuilding</span></span>()&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello!..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IllegalAccessException, InvocationTargetException, InstantiationException &#123;</span><br><span class="line">        Elvis1 elvis1=Elvis1.getInstance();</span><br><span class="line">       // elvis1.leaveTheBuilding();</span><br><span class="line"></span><br><span class="line">        //手动反射去创建实例化对象</span><br><span class="line">        Constructor&lt;?&gt; constructor = Elvis1.class.getDeclaredConstructors()[0];</span><br><span class="line">        constructor.setAccessible(Boolean.TRUE);</span><br><span class="line">        Elvis1 elvis11 = (Elvis1) constructor.newInstance();</span><br><span class="line">        elvis11.leaveTheBuilding();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>抛出不能创建两次的异常：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Exception <span class="keyword">in</span> thread <span class="string">"main"</span> java.lang.reflect.InvocationTargetException</span><br><span class="line">	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)</span><br><span class="line">	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)</span><br><span class="line">	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)</span><br><span class="line">	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)</span><br><span class="line">	at Singleton强化.Elvis1.main(Elvis1.java:30)</span><br><span class="line">Caused by: java.lang.IllegalArgumentException: Cannot create Elvis1 twice</span><br><span class="line">	at Singleton强化.Elvis1.&lt;init&gt;(Elvis1.java:14)</span><br><span class="line">	... 5 more</span><br></pre></td></tr></table></figure></p>
+<p>如果上面两种实现的Singleton是可序列化的，加上implements Serializable只保证它是可序列化的，<br>为了保证反序列化的时候，实例还是Singleton的，必须声明实例域都是瞬时（transient）的，<br>并提供readResolve方法。否则，每次反序列化一个序列化实例，都会创建一个新的实例。<br>下面的例子每次反序列化都会生成新的实例对象：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">package Singleton强化;</span><br><span class="line"></span><br><span class="line">import java.io.*;</span><br><span class="line"></span><br><span class="line">public class Elvis implements Serializable&#123;</span><br><span class="line">    public static final Elvis INSTANCE = new Elvis();</span><br><span class="line"></span><br><span class="line">    private <span class="function"><span class="title">Elvis</span></span>() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void <span class="function"><span class="title">leaveTheBuilding</span></span>() &#123;</span><br><span class="line">        System.out.println(<span class="string">"Hell!..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException, ClassNotFoundException &#123;</span><br><span class="line">        Elvis elvis = new Elvis();</span><br><span class="line">        //elvis.leaveTheBuilding();</span><br><span class="line">        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(<span class="string">"E:/1.6/elvis.txt  "</span>));</span><br><span class="line">        oos.writeObject(elvis);</span><br><span class="line">        oos.close();</span><br><span class="line"></span><br><span class="line">        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(<span class="string">"E:/1.6/elvis.txt  "</span>));</span><br><span class="line">        Elvis o = (Elvis) ois.readObject();</span><br><span class="line">        ois.close();</span><br><span class="line">        System.out.println(elvis == o); //<span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>加入readResolve方法之后：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">package Singleton强化;</span><br><span class="line"></span><br><span class="line">import java.io.*;</span><br><span class="line"></span><br><span class="line">public class Elvis implements Serializable &#123;</span><br><span class="line">    public static final Elvis INSTANCE = new Elvis();</span><br><span class="line"></span><br><span class="line">    private <span class="function"><span class="title">Elvis</span></span>() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void <span class="function"><span class="title">leaveTheBuilding</span></span>() &#123;</span><br><span class="line">        System.out.println(<span class="string">"Hell!..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private Object <span class="function"><span class="title">readResolve</span></span>() &#123;</span><br><span class="line">        // Return the one <span class="literal">true</span> Elvis and <span class="built_in">let</span> the garbage collector&#125;</span><br><span class="line">        // take care of the Elvis impersonator.&#125;</span><br><span class="line">        <span class="built_in">return</span> INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException, ClassNotFoundException &#123;</span><br><span class="line">        //E:/1.6/elvis.txt</span><br><span class="line">        Elvis elvis = Elvis.INSTANCE;</span><br><span class="line">        elvis.leaveTheBuilding();</span><br><span class="line"></span><br><span class="line">        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(<span class="string">"E:/1.6/elvis.txt     "</span>));</span><br><span class="line">        oos.writeObject(elvis);</span><br><span class="line">        oos.close();</span><br><span class="line"></span><br><span class="line">        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(<span class="string">"E:/1.6/elvis.txt     "</span>));</span><br><span class="line">        Elvis o = (Elvis) ois.readObject();</span><br><span class="line">        ois.close();</span><br><span class="line">        System.out.println(elvis == o); //ture</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="单元素枚举类型"><a href="#单元素枚举类型" class="headerlink" title="单元素枚举类型"></a>单元素枚举类型</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package Singleton强化;</span><br><span class="line"></span><br><span class="line">public enum Elvis2 &#123;</span><br><span class="line"></span><br><span class="line">    INSTANCE;</span><br><span class="line"></span><br><span class="line">    public void <span class="function"><span class="title">leaveTheBuilding</span></span>()&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello!..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Elvis2 elvis2=Elvis2.INSTANCE;</span><br><span class="line">        elvis2.leaveTheBuilding();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过枚举实现Singleton更加简洁，同时枚举类型无偿提供了序列化机制，可以防止序列化的时候多次实例化同一对象。枚举类型也可以防止反射攻击，当你试图反射实例化枚举实例的时候会抛出IllegalArgumentException异常。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>单元素的枚举类型已经成为实现Singleton的最佳方法。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-04-23T05:51:53.522Z" itemprop="dateUpdated">2019-04-23 13:51:53</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/123.png" alt="Edward">
+            Edward
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Effective-java/">Effective java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java书籍/">java书籍</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/学习/">学习</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/12/14/Effective_java_003/&title=《【Effective java第二版整理】第三条： 用私有构造器或者枚举类型强化Singleton属性》 — Edward&pic=http://yoursite.com/img/123.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/12/14/Effective_java_003/&title=《【Effective java第二版整理】第三条： 用私有构造器或者枚举类型强化Singleton属性》 — Edward&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/12/14/Effective_java_003/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【Effective java第二版整理】第三条： 用私有构造器或者枚举类型强化Singleton属性》 — Edward&url=http://yoursite.com/2018/12/14/Effective_java_003/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/12/14/Effective_java_003/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/12/14/hello-world/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Hello World</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "NHOU6qcrdobSwD5wwUJJ31pQ-gzGzoHsz",
+            appKey: "E0RJgPMPwkjfMBOA88EalSzJ",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Edward &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/12/14/Effective_java_003/&title=《【Effective java第二版整理】第三条： 用私有构造器或者枚举类型强化Singleton属性》 — Edward&pic=http://yoursite.com/img/123.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/12/14/Effective_java_003/&title=《【Effective java第二版整理】第三条： 用私有构造器或者枚举类型强化Singleton属性》 — Edward&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/12/14/Effective_java_003/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【Effective java第二版整理】第三条： 用私有构造器或者枚举类型强化Singleton属性》 — Edward&url=http://yoursite.com/2018/12/14/Effective_java_003/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/12/14/Effective_java_003/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACM0lEQVR42u3awW6EMAxFUf7/p+mmi0od4D6bVopzsxrNAMmhkhvHPg48zh/j9/fk+qvPZJbXhgwZMpZlnLeDLKs2y/3sfG0yZMjYh3E1MQ+XaWDtzCVDhgwZ/NEPQRBf038RMmTIkJGS+Dc89ZUhQ4YMkkz2p6y9spdzcRkyZCzI4Idl///5T+obMmTIWIpxhoOUM2ubxdp6vu+VIUPGaAYPcHyLVisbpAFXhgwZ+zDIgngqWwvZaar84UoZMmRswEiPz9JC5rtFhQ9PliFDxmYM3sLFCwnpUX68KhkyZIxm8JvTozS+6awd6qHOERkyZAxl8IST/MqvqbWRHXwyGTJkLMuIw1mj2yHdbt4/+TKJlSFDxjhGeojWmYwf3vHDPhkyZOzDSJseatTOgR3aYsqQIWMoo3O8laastUImCscyZMgYzeBtE2nZIF0iL0XEfxMZMmQszuiUGPkBXC1ZDVJfGTJkjGakhUNezuSFSQ5+CP0yZMjYhsGbLUjwrb2I9EoZMmTsw+Dbsk7oTA/vePCVIUPGDoxa80Rts9jvDXn4vyFDhoyhjHSXhYJguDh+10PLhQwZMgYxznCkAbEWcHkZVYYMGTswasEufVDQ9xEmujJkyNiHQYIsL3CmYbcWcIOdowwZMgYxeKCsLSjIqsOyqAwZMmTwsiVPVjuNGi8HXBkyZIxmENL9hrKTBqP6hgwZMsYx+m2sKaBT1JQhQ8ZujFrqyBddK22+tcWUIUPG4owvA6ki4DuylOEAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false}});</script></body>
+</html>

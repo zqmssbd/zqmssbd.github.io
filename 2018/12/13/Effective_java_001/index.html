@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>【Effective java第二版整理】第一条： 静态工厂代替构造器 | Edward</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Effective java,java书籍,学习">
+    <meta name="description" content="考虑用静态工厂方法代替构造器 优势：名称方便区分 不必每次都创建对象 返回原返回类型的任何子类型的对象 在创建参数化对象的时候，它使代码更加简洁化 缺点： 类无公有的或者protected构造器不能被子类化 与其他静态方法没有区别（不像构造函数那样地位高）   对于类而言，为了获取类的实例最常用的方法就是提供一个共有的构造器 。          还有一个方法就是，类可以提供一个静态工厂方法（st">
+<meta name="keywords" content="Effective java,java书籍,学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Effective java第二版整理】第一条： 静态工厂代替构造器">
+<meta property="og:url" content="http://yoursite.com/2018/12/13/Effective_java_001/index.html">
+<meta property="og:site_name" content="Edward">
+<meta property="og:description" content="考虑用静态工厂方法代替构造器 优势：名称方便区分 不必每次都创建对象 返回原返回类型的任何子类型的对象 在创建参数化对象的时候，它使代码更加简洁化 缺点： 类无公有的或者protected构造器不能被子类化 与其他静态方法没有区别（不像构造函数那样地位高）   对于类而言，为了获取类的实例最常用的方法就是提供一个共有的构造器 。          还有一个方法就是，类可以提供一个静态工厂方法（st">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-03-07T03:14:40.315Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【Effective java第二版整理】第一条： 静态工厂代替构造器">
+<meta name="twitter:description" content="考虑用静态工厂方法代替构造器 优势：名称方便区分 不必每次都创建对象 返回原返回类型的任何子类型的对象 在创建参数化对象的时候，它使代码更加简洁化 缺点： 类无公有的或者protected构造器不能被子类化 与其他静态方法没有区别（不像构造函数那样地位高）   对于类而言，为了获取类的实例最常用的方法就是提供一个共有的构造器 。          还有一个方法就是，类可以提供一个静态工厂方法（st">
+    
+        <link rel="alternate" type="application/atom+xml" title="Edward" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/123.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Edward</h5>
+          <a href="mailto:zqmssbd@qq.com" title="zqmssbd@qq.com" class="mail">zqmssbd@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/zqmssbd" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/5333276247" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://gitee.com/Edward_Zeng" target="_blank">
+                <i class="icon icon-lg icon-link"></i>
+                码云
+              </a>
+            </li>
+        
+      </ul>
+      <div>
+          <iframe frameborder="yes" border="80" marginwidth="80" marginheight="80" width="242" height="84" src="//music.163.com/outchain/player?type=2&id=2117005&auto=0&height=66"></iframe>
+      </div>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">【Effective java第二版整理】第一条： 静态工厂代替构造器</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">【Effective java第二版整理】第一条： 静态工厂代替构造器</h1>
+        <h5 class="title">你真的还不够，不够勤奋和努力。</h5>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-12-13T08:25:49.000Z" itemprop="datePublished" class="page-time">
+  2018-12-13
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Effective-java/">Effective java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#优势："><span class="post-toc-number">1.</span> <span class="post-toc-text">优势：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#缺点："><span class="post-toc-number">2.</span> <span class="post-toc-text">缺点：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一-名称方便区别"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">一.名称方便区别</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#二-不必每次都创建对象"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">二.不必每次都创建对象</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#三-可以返回原类型的任何子类的对象"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">三.可以返回原类型的任何子类的对象</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#四-在创建参数化对象的时候，它使代码更加简洁化"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">四.在创建参数化对象的时候，它使代码更加简洁化</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#缺点：-1"><span class="post-toc-number">3.</span> <span class="post-toc-text">缺点：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一-类如果不含有公有的或者受保护的构造器，就不能被子类化"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">一.    类如果不含有公有的或者受保护的构造器，就不能被子类化</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#二-它们本身与其他静态方法实际上是没有任何区别的-它们没有像构造器那样在API文档中明确的标识出来"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">二.  它们本身与其他静态方法实际上是没有任何区别的,它们没有像构造器那样在API文档中明确的标识出来</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#静态工厂方法的一些惯用名称："><span class="post-toc-number">4.</span> <span class="post-toc-text">静态工厂方法的一些惯用名称：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">5.</span> <span class="post-toc-text">总结</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#简而言之，静态工厂方法和共有构造器都各有用处。静态工厂应该是第一考虑，第二才是提供公有的。"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">简而言之，静态工厂方法和共有构造器都各有用处。静态工厂应该是第一考虑，第二才是提供公有的。</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Effective_java_001" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">【Effective java第二版整理】第一条： 静态工厂代替构造器</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-12-13 16:25:49" datetime="2018-12-13T08:25:49.000Z" itemprop="datePublished">2018-12-13</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Effective-java/">Effective java</a></li></ul>
+
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>考虑用静态工厂方法代替构造器</p>
+<h2 id="优势："><a href="#优势：" class="headerlink" title="优势："></a>优势：</h2><pre><code>名称方便区分
+不必每次都创建对象
+返回原返回类型的任何子类型的对象
+在创建参数化对象的时候，它使代码更加简洁化
+</code></pre><h2 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h2><p> 类无公有的或者protected构造器不能被子类化<br> 与其他静态方法没有区别（不像构造函数那样地位高） </p>
+<p> 对于类而言，为了获取类的实例最常用的方法就是提供一个共有的构造器 。        </p>
+<p> 还有一个方法就是，类可以提供一个静态工厂方法（static factory method）,它只是一个返回类的实例的方法。下面是一个Boolean 的简单实例。这个方法将boolean基本类型值转换成一个Boolean对象引用：  </p>
+<p>##优点：</p>
+<h3 id="一-名称方便区别"><a href="#一-名称方便区别" class="headerlink" title="一.名称方便区别"></a>一.名称方便区别</h3><p>  对于一个类来说只能带有一个指明标签的构造器（即构造函数的名称是确定额）。有时候你需要基于这个类的自定义对象，用这种命名的时候可以清楚的将这个类的特点说明白，避免了用户不知道到底该调哪个构造器的问题。</p>
+<h3 id="二-不必每次都创建对象"><a href="#二-不必每次都创建对象" class="headerlink" title="二.不必每次都创建对象"></a>二.不必每次都创建对象</h3><p>  每次缓存起来，使用预先创建好的实例，或者将构建好的实例缓存起来，进行反复利用，从而避免创建不必要的重复对象。</p>
+<p>  上文中Boolean.valueOf(boolean)方法就没有创建新的对象，返回的是已有的对象。</p>
+<p>  ps: 如果线程经常创建相同的对象，并且创建对象的代价很高，单例就可以大大提高性能</p>
+<h3 id="三-可以返回原类型的任何子类的对象"><a href="#三-可以返回原类型的任何子类的对象" class="headerlink" title="三.可以返回原类型的任何子类的对象"></a>三.可以返回原类型的任何子类的对象</h3><p>  这个主要是根据传入工厂静态方法的参数来实现的，只要是已声明的返回类型的子类型，都是可以的。这为我们选择返回类型提供了灵活性。</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">package stu;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 动物静态工厂类</span><br><span class="line"> */</span><br><span class="line">public class AnimalFactory &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IllegalAccessException, InstantiationException, ClassNotFoundException &#123;</span><br><span class="line">        Animal animal = getType();</span><br><span class="line">        animal.eat();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public static Animal getType() throws ClassNotFoundException, IllegalAccessException, InstantiationException &#123;</span><br><span class="line">        Class&lt;?&gt; aClass = Class.forName(<span class="string">"stu.Cat"</span>);</span><br><span class="line">        Animal animal=(Animal) aClass.newInstance();</span><br><span class="line">        <span class="built_in">return</span>  animal;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">package stu;</span><br><span class="line"></span><br><span class="line">public interface Animal &#123;</span><br><span class="line"></span><br><span class="line">    public void eat();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package stu;</span><br><span class="line"></span><br><span class="line">public class Cat implements Animal &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void <span class="function"><span class="title">eat</span></span>() &#123;</span><br><span class="line">        System.out.println(<span class="string">"猫吃鱼"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package stu;</span><br><span class="line"></span><br><span class="line">public class Dog implements Animal  &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void <span class="function"><span class="title">eat</span></span>() &#123;</span><br><span class="line">        System.out.println(<span class="string">"狗吃肉"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 使用于基于接口的框架。而且可以使API返回的对象的类都是私有的（使用构函数肯定不行）</p>
+<p> 服务者提供框架</p>
+<p>  静态工厂方法返回值的对象所属的类，在编写包含改静态工厂方法的类时可以不存在。这种灵活的静态工厂方法构成了服务提供者框架（Service Provider Framework）的基础，例如JDBC（java数据库链接，Java Database Coonectivity ）API 。服务提供者框架就是指这样一个系统的：多个服务提供者实现一个服务，系统为服务提供者的客户端提供多个实现，并把他们从多个实现中解耦出来。</p>
+<pre><code>服务提供者框架包含四大组件-服务接口(提供者实现),提供者注册API(由系统用来注册实现),服务访问API(客户端用来访问服务的实例),服务提供者接口(服务者负责创建其服务实现的实例).对于JDBC来说，Connection就是它的服务接口，DriverManager.registerDriver就是提供者注册API，DriverManager.getConnection就是服务访问API,Driver就是服务提供则接口。
+</code></pre><p> 下面的例子就是服务提供者框架的具体实现:</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">package 服务者提供框架;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 服务提供接口</span><br><span class="line"> */</span><br><span class="line">public interface Provider &#123;</span><br><span class="line"></span><br><span class="line">    public  Service newService();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package 服务者提供框架;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 服务接口</span><br><span class="line"> */</span><br><span class="line">public interface Service &#123;</span><br><span class="line">    public  void doService();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class StrongProvider implements  Provider &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public Service <span class="function"><span class="title">newService</span></span>() &#123;</span><br><span class="line">        <span class="built_in">return</span> new StrongService();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class StrongService implements  Service &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void <span class="function"><span class="title">doService</span></span>() &#123;</span><br><span class="line">        System.out.println(<span class="string">"双击666...."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class WeekProvider implements Provider &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public Service <span class="function"><span class="title">newService</span></span>() &#123;</span><br><span class="line">        <span class="built_in">return</span> new WeekService();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class WeekService implements Service &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void <span class="function"><span class="title">doService</span></span>() &#123;</span><br><span class="line">        System.out.println(<span class="string">"弱爆...."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 测试代码</span><br><span class="line"> */</span><br><span class="line">public class TestService &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Services.registProvider(<span class="string">"week"</span>,new WeekProvider());</span><br><span class="line">        Services.registProvider(<span class="string">"strong"</span>,new StrongProvider());</span><br><span class="line">        Services.registDefaultProvider(new StrongProvider());</span><br><span class="line">        Services.newService().doService();</span><br><span class="line">        Services.newService(<span class="string">"week"</span>).doService();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 注册几个服务提供者,然后根据注册时的名字完成对于服务的调用.</p>
+<h3 id="四-在创建参数化对象的时候，它使代码更加简洁化"><a href="#四-在创建参数化对象的时候，它使代码更加简洁化" class="headerlink" title="四.在创建参数化对象的时候，它使代码更加简洁化"></a>四.在创建参数化对象的时候，它使代码更加简洁化</h3> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String,List&lt;String&gt;&gt; map=new HashMap&lt;String, List&lt;String&gt;&gt;();//简化了上述代码</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static &lt;K,V&gt; HashMap&lt;K,V&gt; <span class="function"><span class="title">newIntance</span></span>()&#123;</span><br><span class="line">    <span class="built_in">return</span> new HashMap&lt;K, V&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String ,List&lt;String &gt;&gt; map=HashMap.newIntance();</span><br><span class="line">//简化的上述代码</span><br></pre></td></tr></table></figure>
+<h2 id="缺点：-1"><a href="#缺点：-1" class="headerlink" title="缺点："></a>缺点：</h2><h3 id="一-类如果不含有公有的或者受保护的构造器，就不能被子类化"><a href="#一-类如果不含有公有的或者受保护的构造器，就不能被子类化" class="headerlink" title="一.    类如果不含有公有的或者受保护的构造器，就不能被子类化"></a>一.    类如果不含有公有的或者受保护的构造器，就不能被子类化</h3><h3 id="二-它们本身与其他静态方法实际上是没有任何区别的-它们没有像构造器那样在API文档中明确的标识出来"><a href="#二-它们本身与其他静态方法实际上是没有任何区别的-它们没有像构造器那样在API文档中明确的标识出来" class="headerlink" title="二.  它们本身与其他静态方法实际上是没有任何区别的,它们没有像构造器那样在API文档中明确的标识出来"></a>二.  它们本身与其他静态方法实际上是没有任何区别的,它们没有像构造器那样在API文档中明确的标识出来</h3><h2 id="静态工厂方法的一些惯用名称："><a href="#静态工厂方法的一些惯用名称：" class="headerlink" title="静态工厂方法的一些惯用名称："></a>静态工厂方法的一些惯用名称：</h2><p>valueOf ——  不太严格地讲，该方法的实例和它的参数具有相同的值。这样的静态工厂实际上是类型转换的方法广发的。<br>of——valueOf的一种更加简单的替代。<br>getInstance——返回的实例是通过方法的参数描述的，但是不能说与参数具有相同的值。对于Singleton来说，该方法没有参数，并且返回唯一的实例。<br>newIntance——像getInstance一样，但是newInstance 能够保证返回的每个实例都与所有其他的实例不同。<br>getType——像getInstance一样，但是在工厂方法处于不同类中的时候使用。Type表示工厂方法所返回的对象类型。<br>newType——像newInstance一样，但是在工厂方法处于不同类中的时候使用。Type表示工厂方法所返回的对象类型。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="简而言之，静态工厂方法和共有构造器都各有用处。静态工厂应该是第一考虑，第二才是提供公有的。"><a href="#简而言之，静态工厂方法和共有构造器都各有用处。静态工厂应该是第一考虑，第二才是提供公有的。" class="headerlink" title="简而言之，静态工厂方法和共有构造器都各有用处。静态工厂应该是第一考虑，第二才是提供公有的。"></a>简而言之，静态工厂方法和共有构造器都各有用处。静态工厂应该是第一考虑，第二才是提供公有的。</h3>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-03-07T03:14:40.315Z" itemprop="dateUpdated">2019-03-07 11:14:40</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/123.png" alt="Edward">
+            Edward
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Effective-java/">Effective java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java书籍/">java书籍</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/学习/">学习</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/12/13/Effective_java_001/&title=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&pic=http://yoursite.com/img/123.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/12/13/Effective_java_001/&title=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/12/13/Effective_java_001/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&url=http://yoursite.com/2018/12/13/Effective_java_001/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/12/13/Effective_java_001/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/12/13/Effective_java_002/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器</h4>
+      </a>
+    </div>
+  
+
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "NHOU6qcrdobSwD5wwUJJ31pQ-gzGzoHsz",
+            appKey: "E0RJgPMPwkjfMBOA88EalSzJ",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Edward &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/12/13/Effective_java_001/&title=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&pic=http://yoursite.com/img/123.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/12/13/Effective_java_001/&title=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/12/13/Effective_java_001/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&url=http://yoursite.com/2018/12/13/Effective_java_001/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/12/13/Effective_java_001/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACL0lEQVR42u3aO47DMAxF0ex/0542RSzfR9oDmLqqAsSRfFIQ/Ojzwev4Wmffrp8/+8xPuWHJkCHjtYxjuc6eSQ/mO5Nvf5woQ4aMDRjrMEpIaWDlZ5EdZMiQIWMdUknimIZmGTJkyOgzaokjB8uQIUNGrYhNE7taAH28FpchQ8YLGbzr/v+fH5lvyJAh41WMI1zktyTVq4XX0xNlyJAxmsEDHEkZeWOuH3BlyJCxD4OHUfK6PDimf8rF6TJkyBjNqF2A6IBJUsiHBGjKIUOGjEEMsnWnJdffhyegMmTImMSojS359a+0VUfwP95EhgwZoxl3pX2kxZY+GQdrGTJkDGX021uklVZr1QVZnwwZMkYz+Ba1axZpUE5HoTJkyNiNkW7aSRl5ERukmDJkyBjKeK41VmvepamkDBkydmCkY8h0IpommqQ8Ll62kCFDxjhGrVnGU8ZaIy/4E2XIkDGIkV7V4kXpE8ODizsjMmTIGMpIf8ZfotOkqwVuGTJkzGaQ1jxv4pOX40Vy8BfLkCFjA0Yw88SpYaueDkcFMmTI2IGRJmpx7hm20uJWoAwZMoYyjnDxISUP2Tzcn4ZyGTJkjGbUgl2aPqYXJmrlsQwZMmYz+BXVYJSIqbWAG2SOMmTIGMSIrzW0m2VpU++GGawMGTK2ZKSkzm4PBlwZMmSMY/AW27pBlo5IL9JNGTJkbMDgL9E/eJ0s1tp/MmTImM1IS8dOUVorXDsppgwZMl7O+AO8D+Tzne8+TgAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false}});</script></body>
+</html>
