@@ -25,18 +25,18 @@
 <meta name="keywords" content="Effective java,java书籍,学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【Effective java第二版整理】第一条： 静态工厂代替构造器">
-<meta property="og:url" content="http://yoursite.com/2018/12/13/Effective_java_001/index.html">
+<meta property="og:url" content="https://gitee.com/2018/12/13/Effective_java_001/index.html">
 <meta property="og:site_name" content="Edward">
 <meta property="og:description" content="考虑用静态工厂方法代替构造器 优势：名称方便区分 不必每次都创建对象 返回原返回类型的任何子类型的对象 在创建参数化对象的时候，它使代码更加简洁化 缺点： 类无公有的或者protected构造器不能被子类化 与其他静态方法没有区别（不像构造函数那样地位高）   对于类而言，为了获取类的实例最常用的方法就是提供一个共有的构造器 。          还有一个方法就是，类可以提供一个静态工厂方法（st">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-03-07T03:14:40.315Z">
+<meta property="og:updated_time" content="2019-10-10T11:12:18.939Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【Effective java第二版整理】第一条： 静态工厂代替构造器">
 <meta name="twitter:description" content="考虑用静态工厂方法代替构造器 优势：名称方便区分 不必每次都创建对象 返回原返回类型的任何子类型的对象 在创建参数化对象的时候，它使代码更加简洁化 缺点： 类无公有的或者protected构造器不能被子类化 与其他静态方法没有区别（不像构造函数那样地位高）   对于类而言，为了获取类的实例最常用的方法就是提供一个共有的构造器 。          还有一个方法就是，类可以提供一个静态工厂方法（st">
     
-        <link rel="alternate" type="application/atom+xml" title="Edward" href="/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="Edward" href="/blog/atom.xml">
     
-    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="shortcut icon" href="/blog/img/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
     <script>window.lazyScripts=[]</script>
 
@@ -53,10 +53,10 @@
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
         <i class="icon icon-lg icon-close"></i>
     </a>
-    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+    <div class="brand-wrap" style="background-image:url(/blog/img/brand.jpg)">
       <div class="brand">
-        <a href="/" class="avatar waves-effect waves-circle waves-light">
-          <img src="/img/123.png">
+        <a href="/blog/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/blog/img/123.png">
         </a>
         <hgroup class="introduce">
           <h5 class="nickname">Edward</h5>
@@ -68,28 +68,28 @@
       <ul class="nav">
         
             <li class="waves-block waves-effect">
-              <a href="/">
+              <a href="/blog/">
                 <i class="icon icon-lg icon-home"></i>
                 主页
               </a>
             </li>
         
             <li class="waves-block waves-effect">
-              <a href="/archives">
+              <a href="/blog/archives">
                 <i class="icon icon-lg icon-archives"></i>
                 Archives
               </a>
             </li>
         
             <li class="waves-block waves-effect">
-              <a href="/tags">
+              <a href="/blog/tags">
                 <i class="icon icon-lg icon-tags"></i>
                 Tags
               </a>
             </li>
         
             <li class="waves-block waves-effect">
-              <a href="/categories">
+              <a href="/blog/categories">
                 <i class="icon icon-lg icon-th-list"></i>
                 Categories
               </a>
@@ -118,7 +118,7 @@
         
       </ul>
       <div>
-          <iframe frameborder="yes" border="80" marginwidth="80" marginheight="80" width="242" height="84" src="//music.163.com/outchain/player?type=2&id=26124797&auto=0&height=66"></iframe>
+          <iframe frameborder="yes" border="80" marginwidth="80" marginheight="80" width="242" height="84" src="//music.163.com/outchain/player?type=2&id=495260242&auto=0he&height=66"></iframe>
       </div>
     </div>
   </div>
@@ -161,7 +161,7 @@
 </time>
 
 
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Effective-java/">Effective java</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/blog/categories/Effective-java/">Effective java</a></li></ul>
 
             
         </h5>
@@ -191,7 +191,7 @@
             <time class="post-time" title="2018-12-13 16:25:49" datetime="2018-12-13T08:25:49.000Z" itemprop="datePublished">2018-12-13</time>
 
             
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Effective-java/">Effective java</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/blog/categories/Effective-java/">Effective java</a></li></ul>
 
 
 
@@ -242,7 +242,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-03-07T03:14:40.315Z" itemprop="dateUpdated">2019-03-07 11:14:40</time>
+    最后更新时间：<time datetime="2019-10-10T11:12:18.939Z" itemprop="dateUpdated">2019-10-10 19:12:18</time>
 </span><br>
 
 
@@ -250,8 +250,8 @@
     </div>
     
     <footer>
-        <a href="http://yoursite.com">
-            <img src="/img/123.png" alt="Edward">
+        <a href="https://gitee.com">
+            <img src="/blog/img/123.png" alt="Edward">
             Edward
         </a>
     </footer>
@@ -262,7 +262,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Effective-java/">Effective java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java书籍/">java书籍</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/学习/">学习</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Effective-java/">Effective java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/java书籍/">java书籍</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/学习/">学习</a></li></ul>
 
 
             
@@ -272,7 +272,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/12/13/Effective_java_001/&title=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&pic=http://yoursite.com/img/123.png" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://gitee.com/2018/12/13/Effective_java_001/&title=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&pic=https://gitee.com/img/123.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -282,22 +282,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/12/13/Effective_java_001/&title=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://gitee.com/2018/12/13/Effective_java_001/&title=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/12/13/Effective_java_001/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://gitee.com/2018/12/13/Effective_java_001/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&url=http://yoursite.com/2018/12/13/Effective_java_001/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&url=https://gitee.com/2018/12/13/Effective_java_001/&via=https://gitee.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/12/13/Effective_java_001/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://gitee.com/2018/12/13/Effective_java_001/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -320,9 +320,9 @@
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="waves-block waves-effect prev">
-      <a href="/2018/12/13/Effective_java_002/" id="post-prev" class="post-nav-link">
+      <a href="/blog/2018/12/13/常见分布式全局唯一ID生成策略及算法的对比/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器</h4>
+        <h4 class="title">常见分布式全局唯一ID生成策略及算法的对比</h4>
       </a>
     </div>
   
@@ -386,13 +386,13 @@
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+                <span><a href="/blog/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
     <div class="bottom">
-        <p><span>Edward &copy; 2015 - 2019</span>
+        <p><span>Edward &copy; 2015 - 2020</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
@@ -410,7 +410,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/12/13/Effective_java_001/&title=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&pic=http://yoursite.com/img/123.png" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://gitee.com/2018/12/13/Effective_java_001/&title=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&pic=https://gitee.com/img/123.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -420,22 +420,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/12/13/Effective_java_001/&title=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://gitee.com/2018/12/13/Effective_java_001/&title=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/12/13/Effective_java_001/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://gitee.com/2018/12/13/Effective_java_001/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&url=http://yoursite.com/2018/12/13/Effective_java_001/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【Effective java第二版整理】第一条： 静态工厂代替构造器》 — Edward&url=https://gitee.com/2018/12/13/Effective_java_001/&via=https://gitee.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/12/13/Effective_java_001/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://gitee.com/2018/12/13/Effective_java_001/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -446,7 +446,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACL0lEQVR42u3aO47DMAxF0ex/0542RSzfR9oDmLqqAsSRfFIQ/Ojzwev4Wmffrp8/+8xPuWHJkCHjtYxjuc6eSQ/mO5Nvf5woQ4aMDRjrMEpIaWDlZ5EdZMiQIWMdUknimIZmGTJkyOgzaokjB8uQIUNGrYhNE7taAH28FpchQ8YLGbzr/v+fH5lvyJAh41WMI1zktyTVq4XX0xNlyJAxmsEDHEkZeWOuH3BlyJCxD4OHUfK6PDimf8rF6TJkyBjNqF2A6IBJUsiHBGjKIUOGjEEMsnWnJdffhyegMmTImMSojS359a+0VUfwP95EhgwZoxl3pX2kxZY+GQdrGTJkDGX021uklVZr1QVZnwwZMkYz+Ba1axZpUE5HoTJkyNiNkW7aSRl5ERukmDJkyBjKeK41VmvepamkDBkydmCkY8h0IpommqQ8Ll62kCFDxjhGrVnGU8ZaIy/4E2XIkDGIkV7V4kXpE8ODizsjMmTIGMpIf8ZfotOkqwVuGTJkzGaQ1jxv4pOX40Vy8BfLkCFjA0Yw88SpYaueDkcFMmTI2IGRJmpx7hm20uJWoAwZMoYyjnDxISUP2Tzcn4ZyGTJkjGbUgl2aPqYXJmrlsQwZMmYz+BXVYJSIqbWAG2SOMmTIGMSIrzW0m2VpU++GGawMGTK2ZKSkzm4PBlwZMmSMY/AW27pBlo5IL9JNGTJkbMDgL9E/eJ0s1tp/MmTImM1IS8dOUVorXDsppgwZMl7O+AO8D+Tzne8+TgAAAABJRU5ErkJggg==" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACN0lEQVR42u3awW6DQAxF0fz/T1Op28Jwn00q4bmsKoWEOSxeZ2x/Pvg6fi/y6dWdV/f8vX/9rNYlQ4aM1zKO5XX14PWdte/y+0+oMmTI2IBBInL9YALgVL42GTJkyOBbQx6ytaCXIUOGjDRw+QbxZkuHI1uGDBkyastKa1/9sH7gLC5DhowXMtLGwH/+/cX+hgwZMl7COMKLbNfShkG6rTz5lgwZMkYz0nEHssmr/Sah3sSxDBkyNmAE0bZcaG2cYv2a0EuRIUPGUEancJ/GIvlWGtAyZMjYgUHijDQAeKkuHQsLBtRkyJCxGaM/eMFLbLzodgOWIUPGaEZt0emgxk1cluJYhgwZOzBqTcpaU4EX1Pg/ABkyZOzASAv96bAFKavVmqYyZMjYh0E2ajzy+JurBfrls2TIkDGa8Wy8plu6TlMhfoAMGTJey+DjDrVxitrGMY5jGTJkjGaQAO00F9fx2gEHW0MZMmS8nNEpcn17y0hegQwZMnZg8OGGWpY/e398lJUhQ8YIBj9ApsvqhPUD5TYZMmSMY/BCGy+T8cJc2sE4+WUZMmSMZqQl/toBlQ9P1A66MmTImM04wosX5mqL43EsQ4aMfRidoOyU4fgxtfabMmTImMfgy0qHIUgo82GL1kCYDBkyRjB4yPLjKC+6paEffCxDhozNGLWtWz9qUatVhgwZMsLwrR1ceVMT9TdkyJAxjpGWz0ixrL/RDA63MmTIGM3oNwY4gzdEO61TGTJkDGL8AH0QDywBw3qbAAAAAElFTkSuQmCC" alt="微信分享二维码">
 </div>
 
 
@@ -454,7 +454,7 @@
 
     <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
 <script>
-var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+var BLOG = { ROOT: '/blog/', SHARE: true, REWARD: false };
 
 
 </script>
@@ -490,5 +490,5 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
 
 
-<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false}});</script></body>
+</body>
 </html>

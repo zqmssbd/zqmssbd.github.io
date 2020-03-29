@@ -14,24 +14,24 @@
     
     
     
-    <title>【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器 | Edward</title>
+    <title>常见分布式全局唯一ID生成策略及算法的对比 | Edward</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="Effective java,java书籍,学习">
+    <meta name="keywords" content="学习,数据库,Redis,snowflake">
     <meta name="description" content="静态工厂和构造器有个共同的局限性：它们都不能很好的扩展到大量的可选参数。   对于这样的类，应该是用哪种构造器或者静态方法来编写呢？ 重构构造器：   程序员一向习惯采用重叠构造器（telescoping constructor) 模式，在这种模式下，你提供第一个只有必要参数的构造器，第二个构造器有一个可选参数，第三个有两个可选参数，依次类推，最后一个构造器包含所有的可选参数。   12345">
-<meta name="keywords" content="Effective java,java书籍,学习">
+<meta name="keywords" content="学习,数据库,Redis,snowflake">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器">
-<meta property="og:url" content="https://gitee.com/2018/12/13/Effective_java_002/index.html">
+<meta property="og:title" content="常见分布式全局唯一ID生成策略及算法的对比">
+<meta property="og:url" content="https://gitee.com/2018/12/13/常见分布式全局唯一ID生成策略及算法的对比/index.html">
 <meta property="og:site_name" content="Edward">
 <meta property="og:description" content="静态工厂和构造器有个共同的局限性：它们都不能很好的扩展到大量的可选参数。   对于这样的类，应该是用哪种构造器或者静态方法来编写呢？ 重构构造器：   程序员一向习惯采用重叠构造器（telescoping constructor) 模式，在这种模式下，你提供第一个只有必要参数的构造器，第二个构造器有一个可选参数，第三个有两个可选参数，依次类推，最后一个构造器包含所有的可选参数。   12345">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-10-10T11:12:18.940Z">
+<meta property="og:updated_time" content="2020-03-29T09:38:14.583Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器">
+<meta name="twitter:title" content="常见分布式全局唯一ID生成策略及算法的对比">
 <meta name="twitter:description" content="静态工厂和构造器有个共同的局限性：它们都不能很好的扩展到大量的可选参数。   对于这样的类，应该是用哪种构造器或者静态方法来编写呢？ 重构构造器：   程序员一向习惯采用重叠构造器（telescoping constructor) 模式，在这种模式下，你提供第一个只有必要参数的构造器，第二个构造器有一个可选参数，第三个有两个可选参数，依次类推，最后一个构造器包含所有的可选参数。   12345">
     
         <link rel="alternate" type="application/atom+xml" title="Edward" href="/blog/atom.xml">
@@ -130,7 +130,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器</div>
+        <div class="flex-col header-title ellipsis">常见分布式全局唯一ID生成策略及算法的对比</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -152,7 +152,7 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 class="title">【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器</h1>
+        <h1 class="title">常见分布式全局唯一ID生成策略及算法的对比</h1>
         <h5 class="title">你真的还不够，不够勤奋和努力。</h5>
         <h5 class="subtitle">
             
@@ -161,7 +161,7 @@
 </time>
 
 
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/blog/categories/Effective-java/">Effective java</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/blog/categories/杂项/">杂项</a></li></ul>
 
             
         </h5>
@@ -183,15 +183,15 @@
     </aside>
 
 
-<article id="post-Effective_java_002" class="post-article article-type-post fade" itemprop="blogPost">
+<article id="post-常见分布式全局唯一ID生成策略及算法的对比" class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器</h1>
+        <h1 class="post-card-title">常见分布式全局唯一ID生成策略及算法的对比</h1>
         <div class="post-meta">
             <time class="post-time" title="2018-12-13 16:33:49" datetime="2018-12-13T08:33:49.000Z" itemprop="datePublished">2018-12-13</time>
 
             
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/blog/categories/Effective-java/">Effective java</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/blog/categories/杂项/">杂项</a></li></ul>
 
 
 
@@ -219,7 +219,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-10-10T11:12:18.940Z" itemprop="dateUpdated">2019-10-10 19:12:18</time>
+    最后更新时间：<time datetime="2020-03-29T09:38:14.583Z" itemprop="dateUpdated">2020-03-29 17:38:14</time>
 </span><br>
 
 
@@ -239,7 +239,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Effective-java/">Effective java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/java书籍/">java书籍</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/学习/">学习</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Redis/">Redis</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/snowflake/">snowflake</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/学习/">学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/数据库/">数据库</a></li></ul>
 
 
             
@@ -249,7 +249,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://gitee.com/2018/12/13/Effective_java_002/&title=《【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器》 — Edward&pic=https://gitee.com/img/123.png" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://gitee.com/2018/12/13/常见分布式全局唯一ID生成策略及算法的对比/&title=《常见分布式全局唯一ID生成策略及算法的对比》 — Edward&pic=https://gitee.com/img/123.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -259,22 +259,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://gitee.com/2018/12/13/Effective_java_002/&title=《【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器》 — Edward&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://gitee.com/2018/12/13/常见分布式全局唯一ID生成策略及算法的对比/&title=《常见分布式全局唯一ID生成策略及算法的对比》 — Edward&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://gitee.com/2018/12/13/Effective_java_002/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://gitee.com/2018/12/13/常见分布式全局唯一ID生成策略及算法的对比/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器》 — Edward&url=https://gitee.com/2018/12/13/Effective_java_002/&via=https://gitee.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《常见分布式全局唯一ID生成策略及算法的对比》 — Edward&url=https://gitee.com/2018/12/13/常见分布式全局唯一ID生成策略及算法的对比/&via=https://gitee.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://gitee.com/2018/12/13/Effective_java_002/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://gitee.com/2018/12/13/常见分布式全局唯一ID生成策略及算法的对比/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -297,18 +297,18 @@
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="waves-block waves-effect prev">
-      <a href="/blog/2018/12/14/hello-world/" id="post-prev" class="post-nav-link">
+      <a href="/blog/2018/12/13/Effective_java_002/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">Hello World</h4>
+        <h4 class="title">【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器</h4>
       </a>
     </div>
   
 
   
     <div class="waves-block waves-effect next">
-      <a href="/blog/2018/12/13/常见分布式全局唯一ID生成策略及算法的对比/" id="post-next" class="post-nav-link">
+      <a href="/blog/2018/12/13/Effective_java_001/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">常见分布式全局唯一ID生成策略及算法的对比</h4>
+        <h4 class="title">【Effective java第二版整理】第一条： 静态工厂代替构造器</h4>
       </a>
     </div>
   
@@ -394,7 +394,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://gitee.com/2018/12/13/Effective_java_002/&title=《【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器》 — Edward&pic=https://gitee.com/img/123.png" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://gitee.com/2018/12/13/常见分布式全局唯一ID生成策略及算法的对比/&title=《常见分布式全局唯一ID生成策略及算法的对比》 — Edward&pic=https://gitee.com/img/123.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -404,22 +404,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://gitee.com/2018/12/13/Effective_java_002/&title=《【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器》 — Edward&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://gitee.com/2018/12/13/常见分布式全局唯一ID生成策略及算法的对比/&title=《常见分布式全局唯一ID生成策略及算法的对比》 — Edward&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://gitee.com/2018/12/13/Effective_java_002/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://gitee.com/2018/12/13/常见分布式全局唯一ID生成策略及算法的对比/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器》 — Edward&url=https://gitee.com/2018/12/13/Effective_java_002/&via=https://gitee.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《常见分布式全局唯一ID生成策略及算法的对比》 — Edward&url=https://gitee.com/2018/12/13/常见分布式全局唯一ID生成策略及算法的对比/&via=https://gitee.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://gitee.com/2018/12/13/Effective_java_002/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://gitee.com/2018/12/13/常见分布式全局唯一ID生成策略及算法的对比/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -430,7 +430,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLklEQVR42u3a0W7DIAwF0P7/T3fSniZ1Sa4NnVbn8BRNhHCo5GHM4xG353f7+XzUXt8673M0/uMdDQMD42MZybSOGOfj9Bait2QYGBh3YFSD4K7wer4E+QgYGBgY+eR2bSIxMDAwdgXclT7VZwwMDIyVZPK8f7IpXA/ZGBgYsxm9wsDfPL+9voGBgfHvGc+FVh1zPek9HBkDA2M043wb14t4u97Kj94wMDDuw1gJneWjsU1F0F8CLgYGxjhGnkbmZYA8GU5S2SiIY2BgjGYkn08O/Xclt4X/Eq/9MTAwhjK2BbvlYkN+OeNib4uBgTGacR4cLwYqxvg8iEf9MTAwRjPydDQ/oD9nVBcoGQcDA+MOjDzg5tRq4K4e3hVOEzEwMEYwqpOuTitJVvOkN7oWhoGBMYixcmk1n0S1tJAUVi9+BwwMjEGM6lZvb8KZb/4K72JgYNyAkV8hrRYjk5Jk7wIHBgbGbEb15SopD7i9ciYGBsYdGNWNYG/SvfJnr1CKgYExlVE9oC+vUO+qRO/zGBgYoxlJelkNnXmSXM28LyqxGBgY4xi9kmSvVLkedi/6Y2BgjGOsXLZYCbLVty4KmRgYGKMZvTCXH6UlR3XVgkGeMGNgYExiVFPWaukx/3u+ccTAwLgnoxdk80LmruT5sD8GBgbG8oWJ6oWz8tcxMDAwlreM69NtVjYwMDAGMZIktpd2Vsd59BoGBsZoRu+KQ6/y0DxK23RRAwMD4wMZX8jADcuEv4rvAAAAAElFTkSuQmCC" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAADHklEQVR42u3awY7iQAwE0P3/n569rrRKqHIHaTAvJ8QQ0q851NjuP3/i6+e/69/3r15fXcmz7p979fmHL2xsbOwPYSdLvFrK/TstJoHlK3mxZdjY2Njr2OcPu9rKNlPyzb1f5wsjNjY2Nvbt49sy5rzswcbGxsaexUkOyKMr32hsbGxs7LaplIdWS5pF6dFYAhsbG3sRe9bu+Z2v3zLfxsbGxv7F7J/yasers6e8+8LGxsbexH72yM5Jq+i+1EmO+7TtJ2xsbOwd7NlXzAbAs+9PNrENVGxsbOxN7PPmURs27b0JcjYexsbGxt7EPvm3/jyW8tKlPpRzr8DGxsZewc6TLY+WfFNOmlbt+OGyqYSNjY394ezz0qItQk7GwM8WP9jY2Ng72EmQtGOA2aB3dgD0qHOGjY2NvYLdNmueHR6cNPfb6BqmNzY2NvavZz8bIbPDNO3gIY/ey3ewsbGx17GTReftpKeiKB8VtFUGNjY29j5225pJxrf5oPepzxftJGxsbOxF7Bnp/OhMAssx+b1FkmNjY2N/CDtZ0AzZBuT5waBiI7CxsbEXsfPgaccAJwFzMhJONgIbGxt7Ezu/OalmioonPhKUlCXJOBkbGxt7K/v8+MusGGiLjfbMZFRcYWNjYy9iJ3EyGxjki2hbRTMqNjY29jew8/ZNe/olL1FyXv4jYWNjY38PO2/Qtwd9ZsXJ+wIPGxsb+xvYs4edlCXJwZ18c+umEjY2NvYHspNDkG2B0S73JKJmgYqNjY29iZ1HwklLKMHkn88HyfmasbGxsXewT+KnbR7lGzRbQyHCxsbGXsGeAWaLyIuH/Brei42Njb2OndzchkS+WflfZ62lF4mNjY2N/bHsn/I63+N25NAOiaPvx8bGxl7Efvf/7bOmfzt4zttS2NjY2FvZbXP/qcBrf5l8bUcjXmxsbOyPZbdjg+SReQupbfq3Cfxi0IuNjY39Zey2FMkHw/ewPDKjUgcbGxsb+6GwaWOv7Y1Fhy+xsbGxV7DzptIshE7aUm2TKyp+sLGxsRex24M4zx6pOR8ktJuOjY2NvYj9FwPsct6J2EatAAAAAElFTkSuQmCC" alt="微信分享二维码">
 </div>
 
 
