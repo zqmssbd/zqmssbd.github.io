@@ -5,9 +5,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="https://gitee.com/"/>
+  <link href="http://springcloud.xn--ses554g/"/>
   <updated>2020-03-30T03:11:49.109Z</updated>
-  <id>https://gitee.com/</id>
+  <id>http://springcloud.xn--ses554g/</id>
   
   <author>
     <name>Edward</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Hexo 博客搭建指南</title>
-    <link href="https://gitee.com/2020/03/29/Hexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/"/>
-    <id>https://gitee.com/2020/03/29/Hexo博客搭建指南/</id>
+    <link href="http://springcloud.xn--ses554g/2020/03/29/Hexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/"/>
+    <id>http://springcloud.xn--ses554g/2020/03/29/Hexo博客搭建指南/</id>
     <published>2020-03-29T13:44:22.000Z</published>
     <updated>2020-03-30T03:11:49.109Z</updated>
     
@@ -34,17 +34,17 @@
     
     </summary>
     
-      <category term="hexo" scheme="https://gitee.com/categories/hexo/"/>
+      <category term="hexo" scheme="http://springcloud.xn--ses554g/categories/hexo/"/>
     
     
-      <category term="hexo" scheme="https://gitee.com/tags/hexo/"/>
+      <category term="hexo" scheme="http://springcloud.xn--ses554g/tags/hexo/"/>
     
   </entry>
   
   <entry>
     <title>常见分布式全局唯一ID生成策略及算法的对比</title>
-    <link href="https://gitee.com/2020/03/29/%E5%B8%B8%E8%A7%81%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80ID%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5%E5%8F%8A%E7%AE%97%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94/"/>
-    <id>https://gitee.com/2020/03/29/常见分布式全局唯一ID生成策略及算法的对比/</id>
+    <link href="http://springcloud.xn--ses554g/2020/03/29/%E5%B8%B8%E8%A7%81%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80ID%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5%E5%8F%8A%E7%AE%97%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94/"/>
+    <id>http://springcloud.xn--ses554g/2020/03/29/常见分布式全局唯一ID生成策略及算法的对比/</id>
     <published>2020-03-29T13:44:22.000Z</published>
     <updated>2020-03-30T02:24:29.370Z</updated>
     
@@ -61,23 +61,23 @@
     
     </summary>
     
-      <category term="技术文章" scheme="https://gitee.com/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/"/>
+      <category term="技术文章" scheme="http://springcloud.xn--ses554g/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/"/>
     
     
-      <category term="学习" scheme="https://gitee.com/tags/%E5%AD%A6%E4%B9%A0/"/>
+      <category term="学习" scheme="http://springcloud.xn--ses554g/tags/%E5%AD%A6%E4%B9%A0/"/>
     
-      <category term="数据库" scheme="https://gitee.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+      <category term="数据库" scheme="http://springcloud.xn--ses554g/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
-      <category term="Redis" scheme="https://gitee.com/tags/Redis/"/>
+      <category term="Redis" scheme="http://springcloud.xn--ses554g/tags/Redis/"/>
     
-      <category term="snowflake" scheme="https://gitee.com/tags/snowflake/"/>
+      <category term="snowflake" scheme="http://springcloud.xn--ses554g/tags/snowflake/"/>
     
   </entry>
   
   <entry>
     <title>【Effective java第二版整理】第三条： 用私有构造器或者枚举类型强化Singleton属性</title>
-    <link href="https://gitee.com/2018/12/14/Effective_java_003/"/>
-    <id>https://gitee.com/2018/12/14/Effective_java_003/</id>
+    <link href="http://springcloud.xn--ses554g/2018/12/14/Effective_java_003/"/>
+    <id>http://springcloud.xn--ses554g/2018/12/14/Effective_java_003/</id>
     <published>2018-12-14T08:33:49.000Z</published>
     <updated>2019-10-10T11:12:18.942Z</updated>
     
@@ -94,21 +94,21 @@
     
     </summary>
     
-      <category term="Effective java" scheme="https://gitee.com/categories/Effective-java/"/>
+      <category term="Effective java" scheme="http://springcloud.xn--ses554g/categories/Effective-java/"/>
     
     
-      <category term="Effective java" scheme="https://gitee.com/tags/Effective-java/"/>
+      <category term="Effective java" scheme="http://springcloud.xn--ses554g/tags/Effective-java/"/>
     
-      <category term="java书籍" scheme="https://gitee.com/tags/java%E4%B9%A6%E7%B1%8D/"/>
+      <category term="java书籍" scheme="http://springcloud.xn--ses554g/tags/java%E4%B9%A6%E7%B1%8D/"/>
     
-      <category term="学习" scheme="https://gitee.com/tags/%E5%AD%A6%E4%B9%A0/"/>
+      <category term="学习" scheme="http://springcloud.xn--ses554g/tags/%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
   <entry>
     <title>Hello World</title>
-    <link href="https://gitee.com/2018/12/14/hello-world/"/>
-    <id>https://gitee.com/2018/12/14/hello-world/</id>
+    <link href="http://springcloud.xn--ses554g/2018/12/14/hello-world/"/>
+    <id>http://springcloud.xn--ses554g/2018/12/14/hello-world/</id>
     <published>2018-12-14T00:58:24.609Z</published>
     <updated>2019-10-10T11:12:18.941Z</updated>
     
@@ -128,8 +128,8 @@
   
   <entry>
     <title>【Effective java第二版整理】第二条： 遇到多个构造器参数时要考虑构造器</title>
-    <link href="https://gitee.com/2018/12/13/Effective_java_002/"/>
-    <id>https://gitee.com/2018/12/13/Effective_java_002/</id>
+    <link href="http://springcloud.xn--ses554g/2018/12/13/Effective_java_002/"/>
+    <id>http://springcloud.xn--ses554g/2018/12/13/Effective_java_002/</id>
     <published>2018-12-13T08:33:49.000Z</published>
     <updated>2019-10-10T11:12:18.940Z</updated>
     
@@ -146,21 +146,21 @@
     
     </summary>
     
-      <category term="Effective java" scheme="https://gitee.com/categories/Effective-java/"/>
+      <category term="Effective java" scheme="http://springcloud.xn--ses554g/categories/Effective-java/"/>
     
     
-      <category term="Effective java" scheme="https://gitee.com/tags/Effective-java/"/>
+      <category term="Effective java" scheme="http://springcloud.xn--ses554g/tags/Effective-java/"/>
     
-      <category term="java书籍" scheme="https://gitee.com/tags/java%E4%B9%A6%E7%B1%8D/"/>
+      <category term="java书籍" scheme="http://springcloud.xn--ses554g/tags/java%E4%B9%A6%E7%B1%8D/"/>
     
-      <category term="学习" scheme="https://gitee.com/tags/%E5%AD%A6%E4%B9%A0/"/>
+      <category term="学习" scheme="http://springcloud.xn--ses554g/tags/%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
   <entry>
     <title>【Effective java第二版整理】第一条： 静态工厂代替构造器</title>
-    <link href="https://gitee.com/2018/12/13/Effective_java_001/"/>
-    <id>https://gitee.com/2018/12/13/Effective_java_001/</id>
+    <link href="http://springcloud.xn--ses554g/2018/12/13/Effective_java_001/"/>
+    <id>http://springcloud.xn--ses554g/2018/12/13/Effective_java_001/</id>
     <published>2018-12-13T08:25:49.000Z</published>
     <updated>2019-10-10T11:12:18.939Z</updated>
     
@@ -179,14 +179,14 @@
     
     </summary>
     
-      <category term="Effective java" scheme="https://gitee.com/categories/Effective-java/"/>
+      <category term="Effective java" scheme="http://springcloud.xn--ses554g/categories/Effective-java/"/>
     
     
-      <category term="Effective java" scheme="https://gitee.com/tags/Effective-java/"/>
+      <category term="Effective java" scheme="http://springcloud.xn--ses554g/tags/Effective-java/"/>
     
-      <category term="java书籍" scheme="https://gitee.com/tags/java%E4%B9%A6%E7%B1%8D/"/>
+      <category term="java书籍" scheme="http://springcloud.xn--ses554g/tags/java%E4%B9%A6%E7%B1%8D/"/>
     
-      <category term="学习" scheme="https://gitee.com/tags/%E5%AD%A6%E4%B9%A0/"/>
+      <category term="学习" scheme="http://springcloud.xn--ses554g/tags/%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
