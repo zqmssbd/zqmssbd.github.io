@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>常见分布式全局唯一ID生成策略及算法的对比 | Edward</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="学习,数据库,Redis,snowflake">
+    <meta name="description" content="全局唯一的 ID 几乎是所有系统都会遇到的刚需。这个 id 在搜索, 存储数据, 加快检索速度 等等很多方面都有着重要的意义。工业上有多种策略来获取这个全局唯一的id，针对常见的几种场景，我在这里进行简单的总结和对比。  简单分析一下需求 [1]所谓全局唯一的 id 其实往往对应是生成唯一记录标识的业务需求。    这个 id 常常是数据库的主键，数据库上会建立聚集索引（cluster index">
+<meta name="keywords" content="学习,数据库,Redis,snowflake">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常见分布式全局唯一ID生成策略及算法的对比">
+<meta property="og:url" content="https://gitee.com/2020/03/29/常见分布式全局唯一ID生成策略及算法的对比/index.html">
+<meta property="og:site_name" content="Edward">
+<meta property="og:description" content="全局唯一的 ID 几乎是所有系统都会遇到的刚需。这个 id 在搜索, 存储数据, 加快检索速度 等等很多方面都有着重要的意义。工业上有多种策略来获取这个全局唯一的id，针对常见的几种场景，我在这里进行简单的总结和对比。  简单分析一下需求 [1]所谓全局唯一的 id 其实往往对应是生成唯一记录标识的业务需求。    这个 id 常常是数据库的主键，数据库上会建立聚集索引（cluster index">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://gavinlee1.github.io/2017/06/28/%E5%B8%B8%E8%A7%81%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80ID%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5%E5%8F%8A%E7%AE%97%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94/optimise01.png">
+<meta property="og:image" content="https://gavinlee1.github.io/2017/06/28/%E5%B8%B8%E8%A7%81%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80ID%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5%E5%8F%8A%E7%AE%97%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94/optimise02.png">
+<meta property="og:image" content="https://gavinlee1.github.io/2017/06/28/%E5%B8%B8%E8%A7%81%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80ID%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5%E5%8F%8A%E7%AE%97%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94/optimise03.png">
+<meta property="og:image" content="https://gavinlee1.github.io/2017/06/28/%E5%B8%B8%E8%A7%81%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80ID%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5%E5%8F%8A%E7%AE%97%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94/snowflake.png">
+<meta property="og:updated_time" content="2020-03-30T02:24:29.370Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="常见分布式全局唯一ID生成策略及算法的对比">
+<meta name="twitter:description" content="全局唯一的 ID 几乎是所有系统都会遇到的刚需。这个 id 在搜索, 存储数据, 加快检索速度 等等很多方面都有着重要的意义。工业上有多种策略来获取这个全局唯一的id，针对常见的几种场景，我在这里进行简单的总结和对比。  简单分析一下需求 [1]所谓全局唯一的 id 其实往往对应是生成唯一记录标识的业务需求。    这个 id 常常是数据库的主键，数据库上会建立聚集索引（cluster index">
+<meta name="twitter:image" content="https://gavinlee1.github.io/2017/06/28/%E5%B8%B8%E8%A7%81%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80ID%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5%E5%8F%8A%E7%AE%97%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94/optimise01.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Edward" href="/blog/atom.xml">
+    
+    <link rel="shortcut icon" href="/blog/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/blog/img/brand.jpg)">
+      <div class="brand">
+        <a href="/blog/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/blog/img/123.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Edward</h5>
+          <a href="mailto:zqmssbd@qq.com" title="zqmssbd@qq.com" class="mail">zqmssbd@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/blog/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/blog/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/blog/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/blog/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/zqmssbd" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/5333276247" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://gitee.com/Edward_Zeng" target="_blank">
+                <i class="icon icon-lg icon-link"></i>
+                码云
+              </a>
+            </li>
+        
+      </ul>
+      <div>
+          <iframe frameborder="yes" border="80" marginwidth="80" marginheight="80" width="242" height="84" src="//music.163.com/outchain/player?type=2&id=495260242&auto=0&height=66"></iframe>
+      </div>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">常见分布式全局唯一ID生成策略及算法的对比</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">常见分布式全局唯一ID生成策略及算法的对比</h1>
+        <h5 class="title">你真的还不够，不够勤奋和努力。</h5>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-29T13:44:22.000Z" itemprop="datePublished" class="page-time">
+  2020-03-29
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/blog/categories/技术文章/">技术文章</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简单分析一下需求-1"><span class="post-toc-number">1.</span> <span class="post-toc-text">简单分析一下需求 [1]</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#常见生成策略的优缺点对比-2"><span class="post-toc-number">2.</span> <span class="post-toc-text">常见生成策略的优缺点对比 [2]</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方法一-用数据库的-auto-increment-来生成"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">方法一: 用数据库的 auto_increment 来生成</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#优点："><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">优点：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点："><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">缺点：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#改进方案："><span class="post-toc-number">2.1.3.</span> <span class="post-toc-text">改进方案：</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方法二：单点批量ID生成服务"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">方法二：单点批量ID生成服务</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#优点"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">优点</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点"><span class="post-toc-number">2.2.2.</span> <span class="post-toc-text">缺点</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#改进方案"><span class="post-toc-number">2.2.3.</span> <span class="post-toc-text">改进方案</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方法三：uuid-guid"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">方法三：uuid / guid</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#优点：-1"><span class="post-toc-number">2.3.1.</span> <span class="post-toc-text">优点：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点：-1"><span class="post-toc-number">2.3.2.</span> <span class="post-toc-text">缺点：</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方法四：取当前毫秒数"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">方法四：取当前毫秒数</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#优点：-2"><span class="post-toc-number">2.4.1.</span> <span class="post-toc-text">优点：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点：-2"><span class="post-toc-number">2.4.2.</span> <span class="post-toc-text">缺点：</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方法五：使用-Redis-来生成-id"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">方法五：使用 Redis 来生成 id</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#优点：-3"><span class="post-toc-number">2.5.1.</span> <span class="post-toc-text">优点：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点：-3"><span class="post-toc-number">2.5.2.</span> <span class="post-toc-text">缺点：</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方法六：Twitter-开源的-Snowflake-算法"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">方法六：Twitter 开源的 Snowflake 算法</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-常见分布式全局唯一ID生成策略及算法的对比" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">常见分布式全局唯一ID生成策略及算法的对比</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-29 21:44:22" datetime="2020-03-29T13:44:22.000Z" itemprop="datePublished">2020-03-29</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/blog/categories/技术文章/">技术文章</a></li></ul>
+
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>全局唯一的 ID 几乎是所有系统都会遇到的刚需。这个 id 在搜索, 存储数据, 加快检索速度 等等很多方面都有着重要的意义。工业上有多种策略来获取这个全局唯一的id，针对常见的几种场景，我在这里进行简单的总结和对比。</p>
+<hr>
+<h2 id="简单分析一下需求-1"><a href="#简单分析一下需求-1" class="headerlink" title="简单分析一下需求 [1]"></a>简单分析一下需求 [1]</h2><p><strong>所谓全局唯一的 id 其实往往对应是生成唯一记录标识的业务需求。</strong></p>
+<p>   这个 id 常常是数据库的主键，数据库上会建立聚集索引（cluster index），即在物理存储上以这个字段排序。这个记录标识上的查询，往往又有分页或者排序的业务需求。所以往往要有一个time字段，并且在time字段上建立普通索引（non-cluster index）。普通索引存储的是实际记录的指针，其访问效率会比聚集索引慢，如果记录标识在生成时能够基本按照时间有序，则可以省去这个time字段的索引查询。</p>
+<p>   这就引出了记录标识生成的两大核心需求：</p>
+<ul>
+<li><p>全局唯一</p>
+</li>
+<li><p>趋势有序</p>
+</li>
+</ul>
+<h2 id="常见生成策略的优缺点对比-2"><a href="#常见生成策略的优缺点对比-2" class="headerlink" title="常见生成策略的优缺点对比 [2]"></a>常见生成策略的优缺点对比 [2]</h2><h3 id="方法一-用数据库的-auto-increment-来生成"><a href="#方法一-用数据库的-auto-increment-来生成" class="headerlink" title="方法一: 用数据库的 auto_increment 来生成"></a>方法一: 用数据库的 auto_increment 来生成</h3><h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h4><ol>
+<li>此方法使用数据库原有的功能，所以相对简单</li>
+<li>能够保证唯一性</li>
+<li>能够保证递增性</li>
+<li>能够保证递增性</li>
+</ol>
+<h4 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h4><ol>
+<li>可用性难以保证：数据库常见架构是 一主多从 + 读写分离，生成自增ID是写请求 主库挂了就玩不转了</li>
+<li>扩展性差，性能有上限：因为写入是单点，数据库主库的写性能决定ID的生成性能上限，并且 难以扩展</li>
+</ol>
+<h4 id="改进方案："><a href="#改进方案：" class="headerlink" title="改进方案："></a>改进方案：</h4><ul>
+<li>冗余主库，避免写入单点</li>
+<li>数据水平切分，保证各主库生成的ID不重复        </li>
+</ul>
+<p><img src="https://gavinlee1.github.io/2017/06/28/%E5%B8%B8%E8%A7%81%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80ID%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5%E5%8F%8A%E7%AE%97%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94/optimise01.png" alt="方法一改进方案结构图">    </p>
+<p>如上图所述，由1个写库变成3个写库，<strong>每个写库设置不同的 auto_increment 初始值，以及相同的增长步长</strong>，以保证每个数据库生成的ID是不同的（上图中DB 01生成0,3,6,9…，DB 02生成1,4,7,10，DB 03生成2,5,8,11…）</p>
+<p>改进后的架构保证了可用性，但缺点是</p>
+<ul>
+<li>丧失了ID生成的“绝对递增性”：先访问DB 01生成0,3，再访问DB 02生成1，可能导致在非常短的时间内，ID生成不是绝对递增的（这个问题不大，目标是趋势递增，不是绝对递增</li>
+<li>数据库的写压力依然很大，每次生成ID都要访问数据库</li>
+</ul>
+<p>为了解决这些问题，引出了以下方法：</p>
+<h3 id="方法二：单点批量ID生成服务"><a href="#方法二：单点批量ID生成服务" class="headerlink" title="方法二：单点批量ID生成服务"></a>方法二：单点批量ID生成服务</h3><p>分布式系统之所以难，很重要的原因之一是“没有一个全局时钟，难以保证绝对的时序”，要想保证绝对的时序，还是只能使用单点服务，用本地时钟保证“绝对时序”。<br>数据库写压力大，是因为每次生成ID都访问了数据库，可以<strong>使用批量的方式降低数据库写压力。</strong></p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://gavinlee1.github.io/2017/06/28/%E5%B8%B8%E8%A7%81%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80ID%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5%E5%8F%8A%E7%AE%97%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94/optimise02.png" alt="方法二的结构图" title="">
+                </div>
+                <div class="image-caption">方法二的结构图</div>
+            </figure>
+<p>如上图所述，数据库使用双master保证可用性，数据库中只存储当前ID的最大值，例如4。</p>
+<p>ID生成服务假设每次批量拉取5个ID，服务访问数据库，将当前ID的最大值修改为4，这样应用访问ID生成服务索要ID，ID生成服务不需要每次访问数据库，就能依次派发0,1,2,3,4这些ID了。</p>
+<p>当ID发完后，再将ID的最大值修改为11，就能再次派发6,7,8,9,10,11这些ID了，于是数据库的压力就降低到原来的1/6。</p>
+<h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>保证了ID生成的绝对递增有序</li>
+<li>大大的降低了数据库的压力，ID生成可以做到每秒生成几万几十万个</li>
+</ul>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li><strong>服务仍然是单点</strong></li>
+<li>如果服务挂了，服务重启起来之后，继续生成ID可能会不连续，中间出现空洞（服务内存是保存着0,1,2,3,4，数据库中max-id是4，分配到3时，服务重启了，下次会从5开始分配，3和4就成了空洞，不过这个问题也不大）</li>
+<li>虽然每秒可以生成几万几十万个ID，但毕竟还是有性能上限，无法进行水平扩展</li>
+</ul>
+<h4 id="改进方案"><a href="#改进方案" class="headerlink" title="改进方案"></a>改进方案</h4><p>单点服务的常用高可用优化方案是“备用服务”，也叫“影子服务”，所以我们能用以下方法优化上述缺点：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://gavinlee1.github.io/2017/06/28/%E5%B8%B8%E8%A7%81%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80ID%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5%E5%8F%8A%E7%AE%97%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94/optimise03.png" alt="方法二的改进结构图" title="">
+                </div>
+                <div class="image-caption">方法二的改进结构图</div>
+            </figure></p>
+<p>如上图，对外提供的服务是主服务，有一个影子服务时刻处于备用状态，当主服务挂了的时候影子服务顶上。这个切换的过程对调用方是透明的，可以自动完成，常用的技术是 vip+keepalived。另外，id generate service 也可以进行水平扩展，以解决上述缺点，但会引发一致性问题。</p>
+<h3 id="方法三：uuid-guid"><a href="#方法三：uuid-guid" class="headerlink" title="方法三：uuid / guid"></a>方法三：uuid / guid</h3><p>不管是通过数据库，还是通过服务来生成ID，业务方Application都需要进行一次远程调用，比较耗时。uuid是一种常见的本地生成ID的方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UUID uuid = UUID.randomUUID();</span><br></pre></td></tr></table></figure></p>
+<h4 id="优点：-1"><a href="#优点：-1" class="headerlink" title="优点："></a>优点：</h4><ul>
+<li>本地生成ID，不需要进行远程调用，时延低</li>
+<li>扩展性好，基本可以认为没有性能上限</li>
+</ul>
+<h4 id="缺点：-1"><a href="#缺点：-1" class="headerlink" title="缺点："></a>缺点：</h4><ul>
+<li><strong>无法保证趋势递增</strong></li>
+<li>uuid过长，往往用字符串表示，<strong>作为主键建立索引查询效率低</strong>，常见优化方案为“转化为两个uint64整数存储”或者“折半存储”（折半后不能保证唯一性）</li>
+</ul>
+<h3 id="方法四：取当前毫秒数"><a href="#方法四：取当前毫秒数" class="headerlink" title="方法四：取当前毫秒数"></a>方法四：取当前毫秒数</h3><p>uuid是一个本地算法，生成性能高，但无法保证趋势递增，且作为字符串ID检索效率低，有没有一种能保证递增的本地算法呢？ - 取当前毫秒数是一种常见方案。</p>
+<h4 id="优点：-2"><a href="#优点：-2" class="headerlink" title="优点："></a>优点：</h4><ul>
+<li>本地生成ID，不需要进行远程调用，时延低</li>
+<li>生成的ID趋势递增</li>
+<li>生成的ID是整数，建立索引后查询效率高<h4 id="缺点：-2"><a href="#缺点：-2" class="headerlink" title="缺点："></a>缺点：</h4></li>
+<li><strong>如果并发量超过1000，会生成重复的ID</strong></li>
+</ul>
+<p>这个缺点要了命了，不能保证ID的唯一性。当然，使用微秒可以降低冲突概率，但每秒最多只能生成1000000个ID，再多的话就一定会冲突了，所以使用微秒并不从根本上解决问题。</p>
+<h3 id="方法五：使用-Redis-来生成-id"><a href="#方法五：使用-Redis-来生成-id" class="headerlink" title="方法五：使用 Redis 来生成 id"></a>方法五：使用 Redis 来生成 id</h3><p>当使用数据库来生成ID性能不够要求的时候，我们可以尝试使用Redis来生成ID。这主要依赖于Redis是单线程的，所以也可以用生成全局唯一的ID。可以用Redis的原子操作 INCR 和 INCRBY 来实现。</p>
+<h4 id="优点：-3"><a href="#优点：-3" class="headerlink" title="优点："></a>优点：</h4><ul>
+<li>依赖于数据库，灵活方便，且性能优于数据库。</li>
+<li>数字ID天然排序，对分页或者需要排序的结果很有帮助。</li>
+</ul>
+<h4 id="缺点：-3"><a href="#缺点：-3" class="headerlink" title="缺点："></a>缺点：</h4><ul>
+<li>如果系统中没有Redis，还需要引入新的组件，增加系统复杂度。</li>
+<li>需要编码和配置的工作量比较大。</li>
+</ul>
+<h3 id="方法六：Twitter-开源的-Snowflake-算法"><a href="#方法六：Twitter-开源的-Snowflake-算法" class="headerlink" title="方法六：Twitter 开源的 Snowflake 算法"></a>方法六：Twitter 开源的 Snowflake 算法</h3><p>snowflake 是 twitter 开源的分布式ID生成算法，其核心思想为，一个long型的ID：</p>
+<ul>
+<li>41 bit 作为毫秒数 - <strong>41位的长度可以使用69年</strong></li>
+<li>10 bit 作为机器编号 （5个bit是数据中心，5个bit的机器ID） - <strong>10位的长度最多支持部署1024个节点</strong></li>
+<li>12 bit 作为毫秒内序列号 - <strong>12位的计数顺序号支持每个节点每毫秒产生4096个ID序号</strong></li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://gavinlee1.github.io/2017/06/28/%E5%B8%B8%E8%A7%81%E5%88%86%E5%B8%83%E5%BC%8F%E5%85%A8%E5%B1%80%E5%94%AF%E4%B8%80ID%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5%E5%8F%8A%E7%AE%97%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94/snowflake.png" alt="SnowFlake图示" title="">
+                </div>
+                <div class="image-caption">SnowFlake图示</div>
+            </figure>
+<p>算法单机每秒内理论上最多可以生成1000*(2^12)，也就是400W的ID，完全能满足业务的需求。</p>
+<p>该算法 java 版本的实现代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line">public class SnowflakeIdGenerator &#123;</span><br><span class="line">    //================================================Algorithm&apos;s Parameter=============================================</span><br><span class="line">    // 系统开始时间截 (UTC 2017-06-28 00:00:00)</span><br><span class="line">    private final long startTime = 1498608000000L;</span><br><span class="line">    // 机器id所占的位数</span><br><span class="line">    private final long workerIdBits = 5L;</span><br><span class="line">    // 数据标识id所占的位数</span><br><span class="line">    private final long dataCenterIdBits = 5L;</span><br><span class="line">    // 支持的最大机器id(十进制)，结果是31 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)</span><br><span class="line">    // -1L 左移 5位 (worker id 所占位数) 即 5位二进制所能获得的最大十进制数 - 31</span><br><span class="line">    private final long maxWorkerId = -1L ^ (-1L &lt;&lt; workerIdBits);</span><br><span class="line">    // 支持的最大数据标识id - 31</span><br><span class="line">    private final long maxDataCenterId = -1L ^ (-1L &lt;&lt; dataCenterIdBits);</span><br><span class="line">    // 序列在id中占的位数</span><br><span class="line">    private final long sequenceBits = 12L;</span><br><span class="line">    // 机器ID 左移位数 - 12 (即末 sequence 所占用的位数)</span><br><span class="line">    private final long workerIdMoveBits = sequenceBits;</span><br><span class="line">    // 数据标识id 左移位数 - 17(12+5)</span><br><span class="line">    private final long dataCenterIdMoveBits = sequenceBits + workerIdBits;</span><br><span class="line">    // 时间截向 左移位数 - 22(5+5+12)</span><br><span class="line">    private final long timestampMoveBits = sequenceBits + workerIdBits + dataCenterIdBits;</span><br><span class="line">    // 生成序列的掩码(12位所对应的最大整数值)，这里为4095 (0b111111111111=0xfff=4095)</span><br><span class="line">    private final long sequenceMask = -1L ^ (-1L &lt;&lt; sequenceBits);</span><br><span class="line">    //=================================================Works&apos;s Parameter================================================</span><br><span class="line">    /**</span><br><span class="line">     * 工作机器ID(0~31)</span><br><span class="line">     */</span><br><span class="line">    private long workerId;</span><br><span class="line">    /**</span><br><span class="line">     * 数据中心ID(0~31)</span><br><span class="line">     */</span><br><span class="line">    private long dataCenterId;</span><br><span class="line">    /**</span><br><span class="line">     * 毫秒内序列(0~4095)</span><br><span class="line">     */</span><br><span class="line">    private long sequence = 0L;</span><br><span class="line">    /**</span><br><span class="line">     * 上次生成ID的时间截</span><br><span class="line">     */</span><br><span class="line">    private long lastTimestamp = -1L;</span><br><span class="line">    //===============================================Constructors=======================================================</span><br><span class="line">    /**</span><br><span class="line">     * 构造函数</span><br><span class="line">     *</span><br><span class="line">     * @param workerId     工作ID (0~31)</span><br><span class="line">     * @param dataCenterId 数据中心ID (0~31)</span><br><span class="line">     */</span><br><span class="line">    public SnowflakeIdGenerator(long workerId, long dataCenterId) &#123;</span><br><span class="line">        if (workerId &gt; maxWorkerId || workerId &lt; 0) &#123;</span><br><span class="line">            throw new IllegalArgumentException(String.format(&quot;Worker Id can&apos;t be greater than %d or less than 0&quot;, maxWorkerId));</span><br><span class="line">        &#125;</span><br><span class="line">        if (dataCenterId &gt; maxDataCenterId || dataCenterId &lt; 0) &#123;</span><br><span class="line">            throw new IllegalArgumentException(String.format(&quot;DataCenter Id can&apos;t be greater than %d or less than 0&quot;, maxDataCenterId));</span><br><span class="line">        &#125;</span><br><span class="line">        this.workerId = workerId;</span><br><span class="line">        this.dataCenterId = dataCenterId;</span><br><span class="line">    &#125;</span><br><span class="line">    // ==================================================Methods========================================================</span><br><span class="line">    // 线程安全的获得下一个 ID 的方法</span><br><span class="line">    public synchronized long nextId() &#123;</span><br><span class="line">        long timestamp = currentTime();</span><br><span class="line">        //如果当前时间小于上一次ID生成的时间戳: 说明系统时钟回退过 - 这个时候应当抛出异常</span><br><span class="line">        if (timestamp &lt; lastTimestamp) &#123;</span><br><span class="line">            throw new RuntimeException(</span><br><span class="line">                    String.format(&quot;Clock moved backwards.  Refusing to generate id for %d milliseconds&quot;, lastTimestamp - timestamp));</span><br><span class="line">        &#125;</span><br><span class="line">        //如果是同一时间生成的，则进行毫秒内序列</span><br><span class="line">        if (lastTimestamp == timestamp) &#123;</span><br><span class="line">            sequence = (sequence + 1) &amp; sequenceMask;</span><br><span class="line">            //毫秒内序列溢出 即 序列 &gt; 4095</span><br><span class="line">            if (sequence == 0) &#123;</span><br><span class="line">                //阻塞到下一个毫秒,获得新的时间戳</span><br><span class="line">                timestamp = blockTillNextMillis(lastTimestamp);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //时间戳改变，毫秒内序列重置</span><br><span class="line">        else &#123;</span><br><span class="line">            sequence = 0L;</span><br><span class="line">        &#125;</span><br><span class="line">        //上次生成ID的时间截</span><br><span class="line">        lastTimestamp = timestamp;</span><br><span class="line">        //移位并通过或运算拼到一起组成64位的ID</span><br><span class="line">        return ((timestamp - startTime) &lt;&lt; timestampMoveBits) //</span><br><span class="line">                | (dataCenterId &lt;&lt; dataCenterIdMoveBits) //</span><br><span class="line">                | (workerId &lt;&lt; workerIdMoveBits) //</span><br><span class="line">                | sequence;</span><br><span class="line">    &#125;</span><br><span class="line">    // 阻塞到下一个毫秒 即 直到获得新的时间戳</span><br><span class="line">    protected long blockTillNextMillis(long lastTimestamp) &#123;</span><br><span class="line">        long timestamp = currentTime();</span><br><span class="line">        while (timestamp &lt;= lastTimestamp) &#123;</span><br><span class="line">            timestamp = currentTime();</span><br><span class="line">        &#125;</span><br><span class="line">        return timestamp;</span><br><span class="line">    &#125;</span><br><span class="line">    // 获得以毫秒为单位的当前时间</span><br><span class="line">    protected long currentTime() &#123;</span><br><span class="line">        return System.currentTimeMillis();</span><br><span class="line">    &#125;</span><br><span class="line">    //====================================================Test Case=====================================================</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SnowflakeIdGenerator idWorker = new SnowflakeIdGenerator(0, 0);</span><br><span class="line">        for (int i = 0; i &lt; 1000; i++) &#123;</span><br><span class="line">            long id = idWorker.nextId();</span><br><span class="line">            System.out.println(Long.toBinaryString(id));</span><br><span class="line">            System.out.println(id);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-03-30T02:24:29.370Z" itemprop="dateUpdated">2020-03-30 10:24:29</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://gitee.com">
+            <img src="/blog/img/123.png" alt="Edward">
+            Edward
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Redis/">Redis</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/snowflake/">snowflake</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/学习/">学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/数据库/">数据库</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://gitee.com/2020/03/29/常见分布式全局唯一ID生成策略及算法的对比/&title=《常见分布式全局唯一ID生成策略及算法的对比》 — Edward&pic=https://gitee.com/img/123.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://gitee.com/2020/03/29/常见分布式全局唯一ID生成策略及算法的对比/&title=《常见分布式全局唯一ID生成策略及算法的对比》 — Edward&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://gitee.com/2020/03/29/常见分布式全局唯一ID生成策略及算法的对比/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《常见分布式全局唯一ID生成策略及算法的对比》 — Edward&url=https://gitee.com/2020/03/29/常见分布式全局唯一ID生成策略及算法的对比/&via=https://gitee.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://gitee.com/2020/03/29/常见分布式全局唯一ID生成策略及算法的对比/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/blog/2020/03/29/Hexo博客搭建指南/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Hexo 博客搭建指南</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/blog/2018/12/14/Effective_java_003/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">【Effective java第二版整理】第三条： 用私有构造器或者枚举类型强化Singleton属性</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "NHOU6qcrdobSwD5wwUJJ31pQ-gzGzoHsz",
+            appKey: "E0RJgPMPwkjfMBOA88EalSzJ",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+
+        <p>
+            
+                <span><a href="/blog/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Edward &copy; 2015 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://gitee.com/2020/03/29/常见分布式全局唯一ID生成策略及算法的对比/&title=《常见分布式全局唯一ID生成策略及算法的对比》 — Edward&pic=https://gitee.com/img/123.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://gitee.com/2020/03/29/常见分布式全局唯一ID生成策略及算法的对比/&title=《常见分布式全局唯一ID生成策略及算法的对比》 — Edward&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://gitee.com/2020/03/29/常见分布式全局唯一ID生成策略及算法的对比/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《常见分布式全局唯一ID生成策略及算法的对比》 — Edward&url=https://gitee.com/2020/03/29/常见分布式全局唯一ID生成策略及算法的对比/&via=https://gitee.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://gitee.com/2020/03/29/常见分布式全局唯一ID生成策略及算法的对比/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAADMklEQVR42u3a227qMBAF0P7/T3NeK/UQ9vYECZuVJwS5eDlSp3P5+YmPx6+jverv5+TXZ2e2144ObGxs7E3Yj8vj+sHJI//eJ/nm2dra75+uExsbG/s4drvcSTjJNzdH5hZsbGxs7CRJyFOLF2HmcluxsbGxsVt2Xiq6xkSpQvksbGxsbOykqNQe+VPWikrJ+TfU0rCxsbE/nj1p2X7a57f0t7GxsbE/mD0JS8kYzWTRa22DaP3Y2NjYB7HbILG2HUnzYK3pO2oDY2NjYx/EXrtpjpmwE0zS6sDGxsb+Bnbypz+B3ZYq3Fr/edEbwcbGxt6WncMmW3BXuX+eJtVTpdjY2NhbsdsGaluKysNeO6DZbgo2Njb2Sew2/CTlofbaPFy1G1FU0bCxsbE3Z+fjOG0JaW2zkgC2lsb8p7+NjY2NvTl7Ml4zSQDaoZ/kbkWKgo2NjX00u00e8jGdyfl5AFssJGFjY2Nvy76rANQW/fMUKDlz1JDAxsbG3pydtwTagZ5JMrN2fhHksLGxsY9jt42BtTJTjlxrP+TDRtjY2Njnsdf+3V8r+rTXti3k6FVhY2NjH8eelHLescRJSzgaD8LGxsY+jt3+x56P5kyGgd5xPjY2NvbZ7MflMdmaSQDL71A0HrCxsbEPYs9HbdoRnLuC3FpwxcbGxj6PnZeN3r337SY+Bgc2Njb2Sezr0DIfuMmL++2ib0t4sLGxsTdn58Gpbc2uBbm86J+nT09zL2xsbOyD2JNgM2keXxf081+T1daNXmxsbOyt2Hk60SYbeViaNCryLcbGxsY+j90mD2vBY23j8iJXvt0v+tvY2NjYG7Lb4v5a4pEnCe/YxOg9Y2NjY2/LzsPVpAjVFo/yVCRvDzx959jY2Nibs9fGFvNz2rCUb2jbNn7R38bGxsbelp0feRtgrcV7HeTylKZo92JjY2MfxG6DVp6u5MWgd5z/4j7Y2NjYx7HvHY7Jk4e8DXBzyMTGxsb+SvZdxaN2fCeBtcUpbGxs7O9ktwnAWjjMB3pGDQBsbGzs49htc7cdxMmLUG1TYe1FYmNjY5/EboPcZGhmrei/drfRsA42Njb2Hux/FeiglEv7daEAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/blog/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+
+
+
+
+<script src="/blog/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/blog/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false}});</script></body>
+</html>

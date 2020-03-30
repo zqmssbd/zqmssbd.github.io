@@ -113,7 +113,7 @@
         
       </ul>
       <div>
-          <iframe frameborder="yes" border="80" marginwidth="80" marginheight="80" width="242" height="84" src="//music.163.com/outchain/player?type=2&id=495260242&auto=0he&height=66"></iframe>
+          <iframe frameborder="yes" border="80" marginwidth="80" marginheight="80" width="242" height="84" src="//music.163.com/outchain/player?type=2&id=495260242&auto=0&height=66"></iframe>
       </div>
     </div>
   </div>
@@ -166,6 +166,112 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-Hexo博客搭建指南" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2020-03-29 21:44:22" datetime="2020-03-29T13:44:22.000Z" itemprop="datePublished">2020-03-29</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/blog/categories/hexo/">hexo</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/blog/2020/03/29/Hexo博客搭建指南/">Hexo 博客搭建指南</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        Hexo 博客搭建指南1 Hexo介绍Hexo是基于NodeJs的静态博客框架，简单、轻量，其生成的静态网页可以托管在Github和Heroku上。
+
+超快速度
+支持MarkDown
+一键部署
+丰富的插件
+
+
+下面以我的博客为例，limedroid.github.io
+
+2 环境准备2.1 安装node.js去nodejs官网下载对应系统的安装包，按提示安装。
+检验安装成功：1$ node ...
+    
+
+        <a href="/blog/2020/03/29/Hexo博客搭建指南/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/hexo/">hexo</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-常见分布式全局唯一ID生成策略及算法的对比" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2020-03-29 21:44:22" datetime="2020-03-29T13:44:22.000Z" itemprop="datePublished">2020-03-29</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/blog/categories/技术文章/">技术文章</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/blog/2020/03/29/常见分布式全局唯一ID生成策略及算法的对比/">常见分布式全局唯一ID生成策略及算法的对比</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        全局唯一的 ID 几乎是所有系统都会遇到的刚需。这个 id 在搜索, 存储数据, 加快检索速度 等等很多方面都有着重要的意义。工业上有多种策略来获取这个全局唯一的id，针对常见的几种场景，我在这里进行简单的总结和对比。
+
+简单分析一下需求 [1]所谓全局唯一的 id 其实往往对应是生成唯一记录标识的业务需求。
+   这个 id 常常是数据库的主键，数据库上会建立聚集索引（cluster in...
+    
+
+        <a href="/blog/2020/03/29/常见分布式全局唯一ID生成策略及算法的对比/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Redis/">Redis</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/snowflake/">snowflake</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/学习/">学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/数据库/">数据库</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-Effective_java_003" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
@@ -193,7 +299,9 @@
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-          Singleton指仅仅被实例化一次的类。Singleton通常被用来代表那些本质上唯一的...
+          Singleton指仅仅被实例化一次的类。Singleton通常被用来代表那些本质上唯一的系统组件。
+  实现单例模式常见有三种方式：
+静态成员 ：  1234567891011121314151617package Singleton强化;public class Elvis &#123;    public  static final  Elvis INSTANCE=new Elvi...
     
 
         <a href="/blog/2018/12/14/Effective_java_003/" class="post-more waves-effect waves-button">
@@ -237,7 +345,8 @@
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        Welcome to Hexo! This is your very first post. ...
+        Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
+Qu...
     
 
         <a href="/blog/2018/12/14/hello-world/" class="post-more waves-effect waves-button">
@@ -278,7 +387,9 @@
 
     
           静态工厂和构造器有个共同的局限性：它们都不能很好的扩展到大量的可选参数。
-  对于这样的类...
+  对于这样的类，应该是用哪种构造器或者静态方法来编写呢？
+重构构造器：   程序员一向习惯采用重叠构造器（telescoping constructor) 模式，在这种模式下，你提供第一个只有必要参数的构造器，第二个构造器有一个可选参数，第三个有两个可选参数，依次类推，最后一个构造器包含所有的可选参数。
+  12...
     
 
         <a href="/blog/2018/12/13/Effective_java_002/" class="post-more waves-effect waves-button">
@@ -289,53 +400,6 @@
     <div class="post-footer">
         
 	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Effective-java/">Effective java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/java书籍/">java书籍</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/学习/">学习</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-常见分布式全局唯一ID生成策略及算法的对比" class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2018-12-13 16:33:49" datetime="2018-12-13T08:33:49.000Z" itemprop="datePublished">2018-12-13</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/blog/categories/杂项/">杂项</a></li></ul>
-
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/blog/2018/12/13/常见分布式全局唯一ID生成策略及算法的对比/">常见分布式全局唯一ID生成策略及算法的对比</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-          静态工厂和构造器有个共同的局限性：它们都不能很好的扩展到大量的可选参数。
-  对于这样的类...
-    
-
-        <a href="/blog/2018/12/13/常见分布式全局唯一ID生成策略及算法的对比/" class="post-more waves-effect waves-button">
-            阅读全文…
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Redis/">Redis</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/snowflake/">snowflake</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/学习/">学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/数据库/">数据库</a></li></ul>
 
     </div>
     
@@ -374,7 +438,11 @@
         考虑用静态工厂方法代替构造器
 优势：名称方便区分
 不必每次都创建对象
-返回原返回类型的任何子类...
+返回原返回类型的任何子类型的对象
+在创建参数化对象的时候，它使代码更加简洁化
+缺点： 类无公有的或者protected构造器不能被子类化 与其他静态方法没有区别（不像构造函数那样地位高） 
+ 对于类而言，为了获取类的实例最常用的方法就是提供一个共有的构造器 。        
+ 还有一个方法就是，类可以提供一个静态工厂方法...
     
 
         <a href="/blog/2018/12/13/Effective_java_001/" class="post-more waves-effect waves-button">
@@ -508,5 +576,5 @@ var BLOG = { ROOT: '/blog/', SHARE: true, REWARD: false };
 
 
 
-</body>
+<script src="/blog/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/blog/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false}});</script></body>
 </html>
