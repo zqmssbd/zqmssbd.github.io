@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Redis常见面试题目 | Edward</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="学习,面试,Redis">
+    <meta name="description" content="介绍：Redis 是一个开源的使用 ANSI C 语言编写、遵守 BSD 协议、支持网络、可基于内存亦可持久化的日志型、Key-Value 数据库，并提供多种语言的 API的非关系型数据库。 传统数据库遵循 ACID 规则。而 Nosql（Not Only SQL 的缩写，是对不同于传统的关系型数据库的数据库管理系统的统称） 一般为分布式而分布式一般遵循 CAP 定理。 Github 源码：htt">
+<meta name="keywords" content="学习,面试,Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis常见面试题目">
+<meta property="og:url" content="http://springcloud.xn--ses554g/2020/03/30/Redis常见面试题目/index.html">
+<meta property="og:site_name" content="Edward">
+<meta property="og:description" content="介绍：Redis 是一个开源的使用 ANSI C 语言编写、遵守 BSD 协议、支持网络、可基于内存亦可持久化的日志型、Key-Value 数据库，并提供多种语言的 API的非关系型数据库。 传统数据库遵循 ACID 规则。而 Nosql（Not Only SQL 的缩写，是对不同于传统的关系型数据库的数据库管理系统的统称） 一般为分布式而分布式一般遵循 CAP 定理。 Github 源码：htt">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/005OVSMDgy1gdcwx52o69j30gm03igll.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/mw690/005OVSMDgy1gdcwullkrfj30fo066juo.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/mw690/005OVSMDgy1gdcwuzrb7ej30bu06p0ts.jpg">
+<meta property="og:image" content="https://wx4.sinaimg.cn/mw690/005OVSMDgy1gdcwv2g1ppj30cu09vtb6.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/005OVSMDgy1gdcwv5h4x7j30c60b5n0d.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/005OVSMDgy1gdcwvmjt18j30e30b378l.jpg">
+<meta property="og:image" content="https://wx3.sinaimg.cn/mw690/005OVSMDgy1gdcwvpciqdj30cp09jjtx.jpg">
+<meta property="og:updated_time" content="2020-03-31T02:44:33.119Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis常见面试题目">
+<meta name="twitter:description" content="介绍：Redis 是一个开源的使用 ANSI C 语言编写、遵守 BSD 协议、支持网络、可基于内存亦可持久化的日志型、Key-Value 数据库，并提供多种语言的 API的非关系型数据库。 传统数据库遵循 ACID 规则。而 Nosql（Not Only SQL 的缩写，是对不同于传统的关系型数据库的数据库管理系统的统称） 一般为分布式而分布式一般遵循 CAP 定理。 Github 源码：htt">
+<meta name="twitter:image" content="https://wx2.sinaimg.cn/mw690/005OVSMDgy1gdcwx52o69j30gm03igll.jpg">
+    
+        <link rel="alternate" type="application/atom+xml" title="Edward" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https'){
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else{
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/123.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Edward</h5>
+          <a href="mailto:zqmssbd@qq.com" title="zqmssbd@qq.com" class="mail">zqmssbd@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/zqmssbd" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/5333276247" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://gitee.com/Edward-Z" target="_blank">
+                <i class="icon icon-lg icon-link"></i>
+                码云
+              </a>
+            </li>
+        
+      </ul>
+      <div>
+          <iframe frameborder="yes" border="80" marginwidth="80" marginheight="80" width="242" height="84" src="//music.163.com/outchain/player?type=2&id=495260242&auto=0&height=66"></iframe>
+      </div>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Redis常见面试题目</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Redis常见面试题目</h1>
+        <h5 class="title">你真的还不够，不够勤奋和努力。</h5>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-30T07:20:55.000Z" itemprop="datePublished" class="page-time">
+  2020-03-30
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/">技术文章</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/redis/">redis</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/redis/中间件/">中间件</a></li></ul></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Redis支持的数据类型？"><span class="post-toc-number">1.</span> <span class="post-toc-text">Redis支持的数据类型？</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#String字符串："><span class="post-toc-number">1.1.</span> <span class="post-toc-text">String字符串：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Hash（哈希）"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Hash（哈希）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#List（列表）"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">List（列表）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Set（集合）"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">Set（集合）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#zset-sorted-set：有序集合"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">zset(sorted set：有序集合)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Redis-HyperLogLog"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">Redis HyperLogLog</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#什么是Redis持久化？Redis有哪几种持久化方式？优缺点是什么？"><span class="post-toc-number">2.</span> <span class="post-toc-text">什么是Redis持久化？Redis有哪几种持久化方式？优缺点是什么？</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#RDB："><span class="post-toc-number">2.1.</span> <span class="post-toc-text">RDB：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#AOF"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">AOF:</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#存储结构"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">存储结构:</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#比较："><span class="post-toc-number">2.4.</span> <span class="post-toc-text">比较：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Redis的过期策略"><span class="post-toc-number">3.</span> <span class="post-toc-text">Redis的过期策略</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Redis-有哪些架构模式？讲讲各自的特点"><span class="post-toc-number">4.</span> <span class="post-toc-text">Redis 有哪些架构模式？讲讲各自的特点</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-单机版"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">1.单机版</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#特点：简单"><span class="post-toc-number">4.1.1.</span> <span class="post-toc-text">特点：简单</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#问题："><span class="post-toc-number">4.1.2.</span> <span class="post-toc-text">问题：</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-主从复制"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">2.主从复制</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#特点："><span class="post-toc-number">4.2.1.</span> <span class="post-toc-text">特点：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#问题：-1"><span class="post-toc-number">4.2.2.</span> <span class="post-toc-text">问题：</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-哨兵"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">3.哨兵</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#特点：-1"><span class="post-toc-number">4.3.1.</span> <span class="post-toc-text">特点：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点：主从模式，切换需要时间丢数据"><span class="post-toc-number">4.3.2.</span> <span class="post-toc-text">缺点：主从模式，切换需要时间丢数据</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-集群（proxy-型）："><span class="post-toc-number">4.4.</span> <span class="post-toc-text">4.集群（proxy 型）：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#特点：-2"><span class="post-toc-number">4.4.1.</span> <span class="post-toc-text">特点：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点："><span class="post-toc-number">4.4.2.</span> <span class="post-toc-text">缺点：</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-集群（直连型）："><span class="post-toc-number">4.5.</span> <span class="post-toc-text">5.集群（直连型）：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#特点：-3"><span class="post-toc-number">4.5.1.</span> <span class="post-toc-text">特点：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点：-1"><span class="post-toc-number">4.5.2.</span> <span class="post-toc-text">缺点：</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#什么是一致性哈希算法？什么是哈希槽？"><span class="post-toc-number">5.</span> <span class="post-toc-text">什么是一致性哈希算法？什么是哈希槽？</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Redis常用命令？"><span class="post-toc-number">6.</span> <span class="post-toc-text">Redis常用命令？</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用过Redis分布式锁么，它是怎么实现的？"><span class="post-toc-number">7.</span> <span class="post-toc-text">使用过Redis分布式锁么，它是怎么实现的？</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用过Redis做异步队列么，你是怎么用的？有什么缺点？"><span class="post-toc-number">8.</span> <span class="post-toc-text">使用过Redis做异步队列么，你是怎么用的？有什么缺点？</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#缺点：-2"><span class="post-toc-number">8.1.</span> <span class="post-toc-text">缺点：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#什么是缓存穿透？如何避免？什么是缓存雪崩？何如避免？"><span class="post-toc-number">9.</span> <span class="post-toc-text">什么是缓存穿透？如何避免？什么是缓存雪崩？何如避免？</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#缓存穿透"><span class="post-toc-number">9.1.</span> <span class="post-toc-text">缓存穿透</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#缓存雪崩"><span class="post-toc-number">9.2.</span> <span class="post-toc-text">缓存雪崩</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Redis常见面试题目" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Redis常见面试题目</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-30 15:20:55" datetime="2020-03-30T07:20:55.000Z" itemprop="datePublished">2020-03-30</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/">技术文章</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/redis/">redis</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/redis/中间件/">中间件</a></li></ul></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>介绍：Redis 是一个开源的使用 ANSI C 语言编写、遵守 BSD 协议、支持网络、可基于内存亦可持久化的日志型、Key-Value 数据库，并提供多种语言的 API的非关系型数据库。</p>
+<p>传统数据库遵循 ACID 规则。而 Nosql（Not Only SQL 的缩写，是对不同于传统的关系型数据库的数据库管理系统的统称） 一般为分布式而分布式一般遵循 CAP 定理。</p>
+<p>Github 源码：<a href="https://github.com/antirez/redis" target="_blank" rel="noopener">https://github.com/antirez/redis</a></p>
+<p>Redis 官网：<a href="https://redis.io/" target="_blank" rel="noopener">https://redis.io/</a></p>
+<h2 id="Redis支持的数据类型？"><a href="#Redis支持的数据类型？" class="headerlink" title="Redis支持的数据类型？"></a>Redis支持的数据类型？</h2><h3 id="String字符串："><a href="#String字符串：" class="headerlink" title="String字符串："></a>String字符串：</h3><p>格式: set key value</p>
+<p>string类型是二进制安全的。意思是redis的string可以包含任何数据。比如jpg图片或者序列化的对象 。</p>
+<p>string类型是Redis最基本的数据类型，一个键最大能存储512MB。</p>
+<h3 id="Hash（哈希）"><a href="#Hash（哈希）" class="headerlink" title="Hash（哈希）"></a>Hash（哈希）</h3><p>格式: hmset name  key1 value1 key2 value2</p>
+<p>Redis hash 是一个键值(key=&gt;value)对集合。</p>
+<p>Redis hash是一个string类型的field和value的映射表，hash特别适合用于存储对象。</p>
+<h3 id="List（列表）"><a href="#List（列表）" class="headerlink" title="List（列表）"></a>List（列表）</h3><p>Redis 列表是简单的字符串列表，按照插入顺序排序。你可以添加一个元素到列表的头部（左边）或者尾部（右边）</p>
+<p>格式: lpush  name  value</p>
+<p>在 key 对应 list 的头部添加字符串元素</p>
+<p>格式: rpush  name  value</p>
+<p>在 key 对应 list 的尾部添加字符串元素</p>
+<p>格式: lrem name  index</p>
+<p>key 对应 list 中删除 count 个和 value 相同的元素</p>
+<p>格式: llen name  </p>
+<p>返回 key 对应 list 的长度</p>
+<h3 id="Set（集合）"><a href="#Set（集合）" class="headerlink" title="Set（集合）"></a>Set（集合）</h3><p>格式: sadd  name  value</p>
+<p>Redis的Set是string类型的无序集合。</p>
+<p>集合是通过哈希表实现的，所以添加，删除，查找的复杂度都是O(1)。</p>
+<h3 id="zset-sorted-set：有序集合"><a href="#zset-sorted-set：有序集合" class="headerlink" title="zset(sorted set：有序集合)"></a>zset(sorted set：有序集合)</h3><p>格式: zadd  name score value</p>
+<p>Redis zset 和 set 一样也是string类型元素的集合,且不允许重复的成员。</p>
+<p>不同的是每个元素都会关联一个double类型的分数。redis正是通过分数来为集合中的成员进行从小到大的排序。</p>
+<p>zset的成员是唯一的,但分数(score)却可以重复。</p>
+<h3 id="Redis-HyperLogLog"><a href="#Redis-HyperLogLog" class="headerlink" title="Redis HyperLogLog"></a>Redis HyperLogLog</h3><p>redis HyperLogLog 是用来做基数统计的算法，HyperLogLog 的优点是，在输入元素的数量或者体积非常非常大时，计算基数所需的空间总是固定 的、并且是很小的。</p>
+<p>在 Redis 里面，每个 HyperLogLog 键只需要花费 12 KB 内存，就可以计算接近 2^64 个不同元素的基 数。这和计算基数时，元素越多耗费内存就越多的集合形成鲜明对比。</p>
+<p>但是，因为 HyperLogLog 只会根据输入元素来计算基数，而不会储存输入元素本身，所以 HyperLogLog 不能像集合那样，返回输入的各个元素。</p>
+<p><strong>什么是基数?</strong></p>
+<p>比如数据集 {1, 3, 5, 7, 5, 7, 8}， 那么这个数据集的基数集为 {1, 3, 5 ,7, 8}, 基数(不重复元素)为5。 基数估计就是在误差可接受的范围内，快速计算基数。</p>
+<p>命令：</p>
+<ol>
+<li>PFADD key element [element …]<br>添加指定元素到 HyperLogLog 中。</li>
+<li>PFCOUNT key [key …]<br>返回给定 HyperLogLog 的基数估算值。</li>
+<li>PFMERGE destkey sourcekey [sourcekey …]<br>将多个 HyperLogLog 合并为一个 HyperLogLog</li>
+</ol>
+<h2 id="什么是Redis持久化？Redis有哪几种持久化方式？优缺点是什么？"><a href="#什么是Redis持久化？Redis有哪几种持久化方式？优缺点是什么？" class="headerlink" title="什么是Redis持久化？Redis有哪几种持久化方式？优缺点是什么？"></a>什么是Redis持久化？Redis有哪几种持久化方式？优缺点是什么？</h2><p>持久化就是把内存的数据写到磁盘中去，防止服务宕机了内存数据丢失。</p>
+<p>Redis 提供了两种持久化方式:RDB（默认） 和AOF </p>
+<h3 id="RDB："><a href="#RDB：" class="headerlink" title="RDB："></a>RDB：</h3><p>rdb是Redis DataBase缩写</p>
+<p>功能核心函数rdbSave(生成RDB文件)和rdbLoad（从文件加载内存）两个函数<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://wx2.sinaimg.cn/mw690/005OVSMDgy1gdcwx52o69j30gm03igll.jpg" alt="RDB" title="">
+                </div>
+                <div class="image-caption">RDB</div>
+            </figure><br>RDB持久化策略。也是redis的默认方法。先将数据存储到内存，当数据累计到某种设定的阈值后会触发一次DUMP 操作,将变化的数据存进RDB文件。一旦 Redis 异常退出，就会丢失最后一次快照以后更改的所有数据</p>
+<h3 id="AOF"><a href="#AOF" class="headerlink" title="AOF:"></a>AOF:</h3><p>Aof是Append-only file缩写<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://wx4.sinaimg.cn/mw690/005OVSMDgy1gdcwullkrfj30fo066juo.jpg" alt="AOF" title="">
+                </div>
+                <div class="image-caption">AOF</div>
+            </figure></p>
+<p>每当执行服务器(定时)任务或者函数时flushAppendOnlyFile 函数都会被调用， 这个函数执行以下两个工作</p>
+<p>aof写入保存：</p>
+<p>WRITE：根据条件，将 aof_buf 中的缓存写入到 AOF 文件</p>
+<p>SAVE：根据条件，调用 fsync 或 fdatasync 函数，将 AOF 文件保存到磁盘中。</p>
+<p>开启AOF持久化策略 先将数据存储到内存。开启 AOF 持久化后每执行一条会更改 Redis 中的数据的命令，Redis 就会将该命令写入硬盘中的 AOF 文件.AOF文件不存储数据，储存的是执行的命令。 AOF最关键的配置就是关于调用fsync追加日志文件的频率，有两种预设频率，always每次记录进来都添加，everysecond 每秒添加一次。（fsync函数的作用就是将数据从内存写入硬盘）。</p>
+<p>由于AOF和RDB存储的文件内容并不相同，RDB存储的是真实的，存进去的数据，AOF存储的是大量操作数据的指令，这种指令一旦增多，就会必然使得AOF文件扩大，所以会引发一种新的机制：Rewrite。所谓Rewrite就是将日志文件中的所有数据都重新写到另外一个新的日志文件中，但是不同的是，对于老日志文件中对于Key的多次操作，只保留最终的值的那次操作记录到日志文件中，从而缩小日志文件的大小。</p>
+<h3 id="存储结构"><a href="#存储结构" class="headerlink" title="存储结构:"></a>存储结构:</h3><p> 内容是redis通讯协议(RESP )格式的命令文本存储。</p>
+<h3 id="比较："><a href="#比较：" class="headerlink" title="比较："></a>比较：</h3><ol>
+<li>aof文件比rdb更新频率高，优先使用aof还原数据。</li>
+<li>aof比rdb更安全也更大</li>
+<li>rdb性能比aof好</li>
+<li><p>如果两个都配了优先加载AOF</p>
+<p><strong>刚刚上面你有提到redis通讯协议(RESP )，能解释下什么是RESP？有什么特点？（可以看到很多面试其实都是连环炮，面试官其实在等着你回答到这个点，如果你答上了对你的评价就又加了一分）</strong></p>
+<p>RESP 是redis客户端和服务端之前使用的一种通讯协议；</p>
+<p>RESP 的特点：实现简单、快速解析、可读性好</p>
+<p>For Simple Strings the first byte of the reply is “+” 回复</p>
+<p>For Errors the first byte of the reply is “-“ 错误</p>
+<p>For Integers the first byte of the reply is “:” 整数</p>
+<p>For Bulk Strings the first byte of the reply is “$” 字符串</p>
+<p>For Arrays the first byte of the reply is “*” 数组</p>
+</li>
+</ol>
+<h2 id="Redis的过期策略"><a href="#Redis的过期策略" class="headerlink" title="Redis的过期策略"></a>Redis的过期策略</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">如何设置redis的过期时间？最简单的就是使用</span><br><span class="line"> expire key second，当然还有各种其他方式，比如</span><br><span class="line"> pexpire key milliseconds等等，redis查看过期时间的语法也很简单，ttl key就可以看到还剩多长时间。</span><br></pre></td></tr></table></figure>
+<p>如何去去删除一个过期的key，最容易想到的就是给每一个key都创建定时器，时间一到就自动删除。这个方法是不靠谱的，虽然它能保证每个过期的key都能被尽快删除，但是创建定时器本身就是一个消耗大量资源的工程，所以并不可取。</p>
+<p>redis内置的策略叫做<strong>惰性删除</strong>，也叫“<strong>被动删除</strong>”。</p>
+<p>key过期的时候不删除，每次从数据库获取key的时候去检查是否过期，若过期，则删除，返回null。<br>这个方法是可取的，但是必然存在另外一个问题，使用的时候判断是否过期再删除，万一我不使用呢？</p>
+<p>若大量的key在超出超时时间后，很久一段时间内，都没有被获取过，那么可能发生内存泄露</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">内存溢出 out of memory，是指程序在申请内存时，没有足够的内存空间供其使用，出现out of memory； 内存泄露</span><br><span class="line">memoryleak，是指程序在申请内存后，无法释放已申请的内存空间，一次内存泄露危害可以忽略，但内存泄露堆积后果很严重，无论多少内存,迟早会被占光。</span><br><span class="line"></span><br><span class="line">内存溢出是堆空间存储内存不够，GC后仍然没有足够的内存来存储新的对象，产生OOM错误。</span><br><span class="line">内存泄露是对象虽然是无用的，但是它仍然是GCroot对象可关联的路径，没有办法GC回收，但是一旦积累过多就会造成OOM.</span><br></pre></td></tr></table></figure>
+<p>这时候还是需要redis去主动检索，所以需要使用另一种策略，<br><strong>定期删除</strong>。，又被称作<strong>主动删除</strong>。<br>每隔一段时间执行一次删除(在redis.conf配置文件设置hz，1s刷新的频率)过期key操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> 第一、配置redis.conf 的hz选项，默认为10 （即1秒执行10次，100ms一次，值越大说明刷新频率越快，最Redis性能损耗也越大） </span><br><span class="line"> </span><br><span class="line">第二、配置redis.conf的maxmemory最大值，当已用内存超过maxmemory限定时，就会触发主动清理策略。主动清理策略不同于主动删除，要尽量避免触发主动清理。</span><br></pre></td></tr></table></figure>
+<p>同时，redis 的过期策略对于持久化并没有影响。如果使用RDB，在持久化key之前就会检测是否过期，过期的key不会被存进文件中，同时从RDB恢复到内存数据库时也会检测一次是否过期。<br>如果使用AOF,由于存储的都是指令，如果key过期，程序会向AOF中追加del指令。在触发Rewrite的时候，会判断key是否过期，过期的key指令不会重写到AOF文件中。</p>
+<h2 id="Redis-有哪些架构模式？讲讲各自的特点"><a href="#Redis-有哪些架构模式？讲讲各自的特点" class="headerlink" title="Redis 有哪些架构模式？讲讲各自的特点"></a>Redis 有哪些架构模式？讲讲各自的特点</h2><h3 id="1-单机版"><a href="#1-单机版" class="headerlink" title="1.单机版"></a>1.单机版</h3><p> <img src="https://wx1.sinaimg.cn/mw690/005OVSMDgy1gdcwuzrb7ej30bu06p0ts.jpg" alt="单机"></p>
+<h4 id="特点：简单"><a href="#特点：简单" class="headerlink" title="特点：简单"></a>特点：简单</h4><h4 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h4><p>1、内存容量有限<br>2、处理能力有限<br>3、无法高可用。</p>
+<h3 id="2-主从复制"><a href="#2-主从复制" class="headerlink" title="2.主从复制"></a>2.主从复制</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://wx4.sinaimg.cn/mw690/005OVSMDgy1gdcwv2g1ppj30cu09vtb6.jpg" alt="主从复制" title="">
+                </div>
+                <div class="image-caption">主从复制</div>
+            </figure>
+<p>Redis 的复制（replication）功能允许用户根据一个 Redis 服务器来创建任意多个该服务器的复制品，其中被复制的服务器为主服务器（master），而通过复制创建出来的服务器复制品则为从服务器（slave）。 只要主从服务器之间的网络连接正常，主从服务器两者会具有相同的数据，主服务器就会一直将发生在自己身上的数据更新同步 给从服务器，从而一直保证主从服务器的数据相同。</p>
+<h4 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h4><p>1、master/slave 角色<br>2、master/slave 数据相同<br>3、降低 master 读压力在转交从库</p>
+<h4 id="问题：-1"><a href="#问题：-1" class="headerlink" title="问题："></a>问题：</h4><p>无法保证高可用</p>
+<p>没有解决 master 写的压力 </p>
+<h3 id="3-哨兵"><a href="#3-哨兵" class="headerlink" title="3.哨兵"></a>3.哨兵</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://wx2.sinaimg.cn/mw690/005OVSMDgy1gdcwv5h4x7j30c60b5n0d.jpg" alt="哨兵" title="">
+                </div>
+                <div class="image-caption">哨兵</div>
+            </figure>
+<p>Redis sentinel 是一个分布式系统中监控 redis 主从服务器，并在主服务器下线时自动进行故障转移。其中三个特性：</p>
+<p>监控（Monitoring）：    Sentinel  会不断地检查你的主服务器和从服务器是否运作正常。</p>
+<p>提醒（Notification）： 当被监控的某个 Redis 服务器出现问题时， Sentinel 可以通过 API 向管理员或者其他应用程序发送通知。</p>
+<p>自动故障迁移（Automatic failover）： 当一个主服务器不能正常工作时， Sentinel 会开始一次自动故障迁移操作。</p>
+<h4 id="特点：-1"><a href="#特点：-1" class="headerlink" title="特点："></a>特点：</h4><p>1、保证高可用<br>2、监控各个节点<br>3、自动故障迁移</p>
+<h4 id="缺点：主从模式，切换需要时间丢数据"><a href="#缺点：主从模式，切换需要时间丢数据" class="headerlink" title="缺点：主从模式，切换需要时间丢数据"></a>缺点：主从模式，切换需要时间丢数据</h4><p>没有解决 master 写的压力</p>
+<h3 id="4-集群（proxy-型）："><a href="#4-集群（proxy-型）：" class="headerlink" title="4.集群（proxy 型）："></a>4.集群（proxy 型）：</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://wx2.sinaimg.cn/mw690/005OVSMDgy1gdcwvmjt18j30e30b378l.jpg" alt="集群（proxy 型）" title="">
+                </div>
+                <div class="image-caption">集群（proxy 型）</div>
+            </figure>
+<p>Twemproxy 是一个 Twitter 开源的一个 redis 和 memcache 快速/轻量级代理服务器； Twemproxy 是一个快速的单线程代理程序，支持 Memcached ASCII 协议和 redis 协议。</p>
+<h4 id="特点：-2"><a href="#特点：-2" class="headerlink" title="特点："></a>特点：</h4><p>1、多种 hash 算法：MD5、CRC16、CRC32、CRC32a、hsieh、murmur、Jenkins<br>2、支持失败节点自动删除<br>3、后端 Sharding 分片逻辑对业务透明，业务方的读写方式和操作单个 Redis 一致</p>
+<h4 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h4><p>增加了新的 proxy，需要维护其高可用。</p>
+<p>failover 逻辑需要自己实现，其本身不能支持故障的自动转移可扩展性差，进行扩缩容都需要手动干预</p>
+<h3 id="5-集群（直连型）："><a href="#5-集群（直连型）：" class="headerlink" title="5.集群（直连型）："></a>5.集群（直连型）：</h3> <figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://wx3.sinaimg.cn/mw690/005OVSMDgy1gdcwvpciqdj30cp09jjtx.jpg" alt="集群（直连型）" title="">
+                </div>
+                <div class="image-caption">集群（直连型）</div>
+            </figure>
+<p>从redis 3.0之后版本支持redis-cluster集群，Redis-Cluster采用无中心结构，每个节点保存数据和整个集群状态,每个节点都和其他所有节点连接。</p>
+<h4 id="特点：-3"><a href="#特点：-3" class="headerlink" title="特点："></a>特点：</h4><p>1、无中心架构（不存在哪个节点影响性能瓶颈），少了 proxy 层。<br>2、数据按照 slot 存储分布在多个节点，节点间数据共享，可动态调整数据分布。<br>3、可扩展性，可线性扩展到 1000 个节点，节点可动态添加或删除。<br>4、高可用性，部分节点不可用时，集群仍可用。通过增加 Slave 做备份数据副本<br>5、实现故障自动 failover，节点之间通过 gossip 协议交换状态信息，用投票机制完成 Slave到 Master 的角色提升。</p>
+<h4 id="缺点：-1"><a href="#缺点：-1" class="headerlink" title="缺点："></a>缺点：</h4><p>1、资源隔离性较差，容易出现相互影响的情况。<br>2、数据通过异步复制,不保证数据的强一致性</p>
+<h2 id="什么是一致性哈希算法？什么是哈希槽？"><a href="#什么是一致性哈希算法？什么是哈希槽？" class="headerlink" title="什么是一致性哈希算法？什么是哈希槽？"></a>什么是一致性哈希算法？什么是哈希槽？</h2><p>这两个问题篇幅过长 网上找了两个解锁的不错的文章</p>
+<p><a href="https://www.cnblogs.com/lpfuture/p/5796398.html" target="_blank" rel="noopener">https://www.cnblogs.com/lpfuture/p/5796398.html</a></p>
+<p><a href="https://blog.csdn.net/z15732621582/article/details/79121213" target="_blank" rel="noopener">https://blog.csdn.net/z15732621582/article/details/79121213</a></p>
+<h2 id="Redis常用命令？"><a href="#Redis常用命令？" class="headerlink" title="Redis常用命令？"></a>Redis常用命令？</h2><p>Keys pattern</p>
+<p>*表示区配所有</p>
+<p>以bit开头的</p>
+<p>查看Exists  key是否存在</p>
+<p>Set</p>
+<p>设置 key 对应的值为 string 类型的 value。</p>
+<p>setnx</p>
+<p>设置 key 对应的值为 string 类型的 value。如果 key 已经存在，返回 0，nx 是 not exist 的意思。</p>
+<p>删除某个key</p>
+<p>第一次返回1 删除了 第二次返回0</p>
+<p>Expire 设置过期时间（单位秒）</p>
+<p>TTL查看剩下多少时间</p>
+<p>返回负数则key失效，key不存在了</p>
+<p>Setex</p>
+<p>设置 key 对应的值为 string 类型的 value，并指定此键值对应的有效期。</p>
+<p>Mset</p>
+<p>一次设置多个 key 的值，成功返回 ok 表示所有的值都设置了，失败返回 0 表示没有任何值被设置。</p>
+<p>Getset</p>
+<p>设置 key 的值，并返回 key 的旧值。</p>
+<p>Mget</p>
+<p>一次获取多个 key 的值，如果对应 key 不存在，则对应返回 nil。</p>
+<p>Incr</p>
+<p>对 key 的值做加加操作,并返回新的值。注意 incr 一个不是 int 的 value 会返回错误，incr 一个不存在的 key，则设置 key 为 1</p>
+<p>incrby</p>
+<p>同 incr 类似，加指定值 ，key 不存在时候会设置 key，并认为原来的 value 是 0</p>
+<p>Decr</p>
+<p>对 key 的值做的是减减操作，decr 一个不存在 key，则设置 key 为-1</p>
+<p>Decrby</p>
+<p>同 decr，减指定值。</p>
+<p>Append</p>
+<p>给指定 key 的字符串值追加 value,返回新字符串值的长度。</p>
+<p>Strlen</p>
+<p>取指定 key 的 value 值的长度。</p>
+<p>persist xxx(取消过期时间)</p>
+<p>选择数据库（0-15库）</p>
+<p>Select 0 //选择数据库</p>
+<p>move age 1//把age 移动到1库</p>
+<p>Randomkey随机返回一个key</p>
+<p>Rename重命名</p>
+<p>Type 返回数据类型</p>
+<h2 id="使用过Redis分布式锁么，它是怎么实现的？"><a href="#使用过Redis分布式锁么，它是怎么实现的？" class="headerlink" title="使用过Redis分布式锁么，它是怎么实现的？"></a>使用过Redis分布式锁么，它是怎么实现的？</h2><p>先拿setnx来争抢锁，抢到之后，再用expire给锁加一个过期时间防止锁忘记了释放。</p>
+<p><strong>如果在setnx之后执行expire之前进程意外crash或者要重启维护了，那会怎么样？</strong></p>
+<p>set指令有非常复杂的参数，这个应该是可以同时把setnx和expire合成一条指令来用的！</p>
+<h2 id="使用过Redis做异步队列么，你是怎么用的？有什么缺点？"><a href="#使用过Redis做异步队列么，你是怎么用的？有什么缺点？" class="headerlink" title="使用过Redis做异步队列么，你是怎么用的？有什么缺点？"></a>使用过Redis做异步队列么，你是怎么用的？有什么缺点？</h2><p>一般使用list结构作为队列，rpush生产消息，lpop消费消息。当lpop没有消息的时候，要适当sleep一会再重试。</p>
+<h3 id="缺点：-2"><a href="#缺点：-2" class="headerlink" title="缺点："></a>缺点：</h3><p>在消费者下线的情况下，生产的消息会丢失，得使用专业的消息队列如rabbitmq等。</p>
+<p><strong>能不能生产一次消费多次呢？</strong></p>
+<p>使用pub/sub主题订阅者模式，可以实现1:N的消息队列。</p>
+<h2 id="什么是缓存穿透？如何避免？什么是缓存雪崩？何如避免？"><a href="#什么是缓存穿透？如何避免？什么是缓存雪崩？何如避免？" class="headerlink" title="什么是缓存穿透？如何避免？什么是缓存雪崩？何如避免？"></a>什么是缓存穿透？如何避免？什么是缓存雪崩？何如避免？</h2><h3 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h3><p>一般的缓存系统，都是按照key去缓存查询，如果不存在对应的value，就应该去后端系统查找（比如DB）。一些恶意的请求会故意查询不存在的key,请求量很大，就会对后端系统造成很大的压力。这就叫做缓存穿透。</p>
+<p>如何避免？</p>
+<p>1：对查询结果为空的情况也进行缓存，缓存时间设置短一点，或者该key对应的数据insert了之后清理缓存。</p>
+<p>2：对一定不存在的key进行过滤。可以把所有的可能存在的key放到一个大的Bitmap中，查询时通过该bitmap过滤。</p>
+<h3 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h3><p>当缓存服务器重启或者大量缓存集中在某一个时间段失效，这样在失效的时候，会给后端系统带来很大压力。导致系统崩溃。</p>
+<p>如何避免？</p>
+<p>1：在缓存失效后，通过加锁或者队列来控制读数据库写缓存的线程数量。比如对某个key只允许一个线程查询数据和写缓存，其他线程等待。</p>
+<p>2：做二级缓存，A1为原始缓存，A2为拷贝缓存，A1失效时，可以访问A2，A1缓存失效时间设置为短期，A2设置为长期</p>
+<p>3：不同的key，设置不同的过期时间，让缓存失效的时间点尽量均匀。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-03-31T02:44:33.119Z" itemprop="dateUpdated">2020-03-31 10:44:33</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://springcloud.xn--ses554g">
+            <img src="/img/123.png" alt="Edward">
+            Edward
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/学习/">学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/面试/">面试</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://springcloud.xn--ses554g/2020/03/30/Redis常见面试题目/&title=《Redis常见面试题目》 — Edward&pic=http://springcloud.xn--ses554g/img/123.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://springcloud.xn--ses554g/2020/03/30/Redis常见面试题目/&title=《Redis常见面试题目》 — Edward&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://springcloud.xn--ses554g/2020/03/30/Redis常见面试题目/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Redis常见面试题目》 — Edward&url=http://springcloud.xn--ses554g/2020/03/30/Redis常见面试题目/&via=http://springcloud.xn--ses554g" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://springcloud.xn--ses554g/2020/03/30/Redis常见面试题目/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/03/30/分布式Session/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">分布式Session</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/03/30/分布式日志/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">分布式日志</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "NHOU6qcrdobSwD5wwUJJ31pQ-gzGzoHsz",
+            appKey: "E0RJgPMPwkjfMBOA88EalSzJ",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv">
+        站点总访客数：30<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv">
+        站点总访问量：425<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Edward &copy; 2015 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://springcloud.xn--ses554g/2020/03/30/Redis常见面试题目/&title=《Redis常见面试题目》 — Edward&pic=http://springcloud.xn--ses554g/img/123.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://springcloud.xn--ses554g/2020/03/30/Redis常见面试题目/&title=《Redis常见面试题目》 — Edward&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://springcloud.xn--ses554g/2020/03/30/Redis常见面试题目/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Redis常见面试题目》 — Edward&url=http://springcloud.xn--ses554g/2020/03/30/Redis常见面试题目/&via=http://springcloud.xn--ses554g" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://springcloud.xn--ses554g/2020/03/30/Redis常见面试题目/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACs0lEQVR42u3aQW7jQAwEwPz/0w6Qa2K7mxzJu0DpZCSyNDWHIU3y6yu+Hj/X68+/70/ufPat3/cnTxheeHh4eKOlP7sSXvvi199KeMma8fDw8K7mtcFgg8/DTLLdbyx4eHh4H+W9OYJHISFfKB4eHt7/yEte/wzwejs2aT0eHh7ep3jJo/N7km+93qA8WT9Wa8HDw8OLeacaYHd+/kB/Dw8PDy8+uNsjOD+m2yfUa8PDw8O7gDdr/7dDV0npdtYSiwIGHh4e3mW8vKCwL7+2+LYJ90dgwMPDwzvE27S4hsd0/LRkW9+ENzw8PLxbeLNkd9aI2geJOvfHw8PDO8RrD/fZkb0p0bapPx4eHt5neZui6mbj2nui/h4eHh7eIV7bspoNE+yLv8d+MeDh4eEteKdKDHWyG5d094MOeHh4eGd5+SPyYYK6TRWn2vU4Fx4eHt4FvHasKh+BesTX2RJGUczFw8PDW/Bm7f926XmhoU2do43Aw8PDO8prl5Uf2W0anVDzcIKHh4d3BS8vMcyGDNpSxey7T8MSHh4e3mW89jWbRW8CRnI/Hh4e3j28s8fxrOBbj1JtUmo8PDy8NW9fgMgP7nZAIdn6p2/Ew8PDu4A3S4jbpv5siZuWWxRJ8PDw8A7xEsCp8kEbMNrRLjw8PLz7eUmC2zLa9n8+zlUHBjw8PLwFb3bstsn0gYbWKHjg4eHh3cmbNZ9mZdw27S4uPDw8vKO8R3nlpd62EJyXj1chAQ8PD2/Nm403tYnvJhTljTc8PDy8O3n7YJA3tNoybluP/WO1eHh4eJfxNgME7X9ng1nDSSo8PDy8f5I3Gy9oA0/+96hGgoeHh3cLLxkCyMek8nR5ODSAh4eHdzFvtqz8mM6fn7fEokQcDw8P7wLe7Kd+Tt2ny/l2HOjv4eHh4b3ifQPvi5KX0f/JtQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false}});</script></body>
+</html>
