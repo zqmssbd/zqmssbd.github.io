@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>八大排序算法 | Edward</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="学习,面试,算法">
+    <meta name="description" content="八大排序算法                                                                                             排序算法              他们的性能比较：">
+<meta name="keywords" content="学习,面试,算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="八大排序算法">
+<meta property="og:url" content="http://springcloud.xn--ses554g/2020/03/31/八大排序算法/index.html">
+<meta property="og:site_name" content="Edward">
+<meta property="og:description" content="八大排序算法                                                                                             排序算法              他们的性能比较：">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/1156494-ab4cecff133d87b3.png">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/1156494-62f859c2ac6f95ff.png">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/1156494-fef2b2e3edc03289.gif">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/1156494-2d150e5550b700fa.gif">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/1156494-936d9f02b6aac880.gif">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/1156494-80700e24aed3d83e.png">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/1156494-25821a7cb5aec881.gif">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/1156494-596eee6397817ca2.png">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/1156494-7e5c63ce1ed48ebf.png">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/1156494-0597aa6877e219f0.gif">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/1156494-70872a75238d1269.gif">
+<meta property="og:updated_time" content="2020-03-31T09:02:41.058Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="八大排序算法">
+<meta name="twitter:description" content="八大排序算法                                                                                             排序算法              他们的性能比较：">
+<meta name="twitter:image" content="http://springcloud.xn--ses554g/img/1156494-ab4cecff133d87b3.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Edward" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https'){
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else{
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/123.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Edward</h5>
+          <a href="mailto:zqmssbd@qq.com" title="zqmssbd@qq.com" class="mail">zqmssbd@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/zqmssbd" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/5333276247" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="https://gitee.com/Edward-Z" target="_blank">
+                <i class="icon icon-lg icon-link"></i>
+                码云
+              </a>
+            </li>
+          
+      </ul>
+        <div id="tp-weather-widget"></div>
+        <script>
+            (function(a,h,g,f,e,d,c,b){b=function(){d=h.createElement(g);c=h.getElementsByTagName(g)[0];d.src=e;d.charset="utf-8";d.async=1;c.parentNode.insertBefore(d,c)};a["SeniverseWeatherWidgetObject"]=f;a[f]||(a[f]=function(){(a[f].q=a[f].q||[]).push(arguments)});a[f].l=+new Date();if(a.attachEvent){a.attachEvent("onload",b)}else{a.addEventListener("load",b,false)}}(window,document,"script","SeniverseWeatherWidget","//cdn.sencdn.com/widget2/static/js/bundle.js?t="+parseInt((new Date().getTime() / 100000000).toString(),10)));
+            window.SeniverseWeatherWidget('show', {
+                flavor: "bubble",
+                location: "WT3Q0FW9ZJ3Q",
+                geolocation: true,
+                language: "zh-Hans",
+                unit: "c",
+                theme: "auto",
+                token: "74eabe8a-0b6b-4a56-86ac-c773a4d98218",
+                hover: "enabled",
+                container: "tp-weather-widget"
+            })
+        </script>
+      <div>
+          <iframe frameborder="yes" border="80" marginwidth="80" marginheight="80" width="240" height="84" src="//music.163.com/outchain/player?type=2&id=495260242&auto=0&height=66"></iframe>
+      </div>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">八大排序算法</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">八大排序算法</h1>
+        <h5 class="title">你真的还不够，不够勤奋和努力。</h5>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-31T08:11:25.000Z" itemprop="datePublished" class="page-time">
+  2020-03-31
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/">技术文章</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/算法/">算法</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https'){
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else{
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#八大排序算法"><span class="post-toc-number">1.</span> <span class="post-toc-text">八大排序算法</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#冒泡排序"><span class="post-toc-number">2.</span> <span class="post-toc-text">冒泡排序</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#快速排序"><span class="post-toc-number">3.</span> <span class="post-toc-text">快速排序</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#直接插入排序"><span class="post-toc-number">4.</span> <span class="post-toc-text">直接插入排序</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#希尔排序"><span class="post-toc-number">5.</span> <span class="post-toc-text">希尔排序</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#简单选择排序"><span class="post-toc-number">6.</span> <span class="post-toc-text">简单选择排序</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#堆排序"><span class="post-toc-number">7.</span> <span class="post-toc-text">堆排序</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#简单选择排序-1"><span class="post-toc-number">8.</span> <span class="post-toc-text">简单选择排序</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#基数排序"><span class="post-toc-number">9.</span> <span class="post-toc-text">基数排序</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-八大排序算法" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">八大排序算法</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-31 16:11:25" datetime="2020-03-31T08:11:25.000Z" itemprop="datePublished">2020-03-31</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/">技术文章</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/算法/">算法</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="八大排序算法"><a href="#八大排序算法" class="headerlink" title="八大排序算法"></a>八大排序算法</h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/1156494-ab4cecff133d87b3.png" alt="排序算法" title="">
+                </div>
+                <div class="image-caption">排序算法</div>
+            </figure>
+<p>他们的性能比较：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/1156494-62f859c2ac6f95ff.png" alt="性能比较" title="">
+                </div>
+                <div class="image-caption">性能比较</div>
+            </figure>
+<h1 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/1156494-fef2b2e3edc03289.gif" alt="冒泡排序" title="">
+                </div>
+                <div class="image-caption">冒泡排序</div>
+            </figure>
+<ul>
+<li>算法思想：</li>
+</ul>
+<ol>
+<li>将序列当中的左右元素，依次比较，保证右边的元素始终大于左边的元素；<br>（ 第一轮结束后，序列最后一个元素一定是当前序列的最大值；）</li>
+<li>对序列当中剩下的n-1个元素再次执行步骤1。</li>
+<li>对于长度为n的序列，一共需要执行n-1轮比较<br>（利用while循环可以减少执行次数）</li>
+</ol>
+<ul>
+<li>代码实现</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package com.example.demo.排序算法.交换排序.冒泡排序;</span><br><span class="line"></span><br><span class="line">import java.util.Arrays;</span><br><span class="line"></span><br><span class="line">public class BubbleSort &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int arr[]=&#123;4,2,5,1,66,9&#125;;</span><br><span class="line">        bubbleSort(arr);</span><br><span class="line">        Arrays.stream(arr).forEach(value -&gt; System.out.print(value+&quot; &quot;));</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void  bubbleSort(int[] arr)&#123;</span><br><span class="line">        for (int i = 0; i &lt; arr.length - 1; i++) &#123;</span><br><span class="line">            for (int j = 0; j &lt; arr.length - 1-i; j++) &#123;</span><br><span class="line">                if (arr[j]&gt;arr[j+1])&#123;</span><br><span class="line">                    int temp=arr[j];</span><br><span class="line">                    arr[j]=arr[j+1];</span><br><span class="line">                    arr[j+1]=temp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/1156494-2d150e5550b700fa.gif" alt="快速排序" title="">
+                </div>
+                <div class="image-caption">快速排序</div>
+            </figure>
+<ul>
+<li>算法思想：挖坑填数+分治法</li>
+</ul>
+<ol>
+<li>从序列当中选择一个基准数(pivot)<br>在这里我们选择序列当中第一个数最为基准数</li>
+<li>将序列当中的所有数依次遍历，比基准数大的位于其右侧，比基准数小的位于其左侧</li>
+<li>重复步骤1.2，直到所有子集当中只有一个元素为止。</li>
+</ol>
+<p>用伪代码描述如下：<br>1．i =L; j = R; 将基准数挖出形成第一个坑a[i]。<br>2．j–由后向前找比它小的数，找到后挖出此数填前一个坑a[i]中。<br>3．i++由前向后找比它大的数，找到后也挖出此数填到前一个坑a[j]中。<br>4．再重复执行2，3二步，直到i==j，将基准数填入a[i]中</p>
+<ul>
+<li>代码实现</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package com.example.demo.排序算法.交换排序.快速排序;</span><br><span class="line"></span><br><span class="line">import java.util.Arrays;</span><br><span class="line"></span><br><span class="line">public class QuickSort &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int arr[]=&#123;4,2,5,1,66,9&#125;;</span><br><span class="line">        quickSort(arr,0,arr.length-1);</span><br><span class="line">        Arrays.stream(arr).forEach(value -&gt; System.out.print(value+&quot; &quot;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void  quickSort(int[] arr,int start,int end)&#123;</span><br><span class="line">        if (start&lt;end)&#123;</span><br><span class="line">            //先把数组中第0个作为标准数</span><br><span class="line">            int stard=arr[start];</span><br><span class="line">            // 记录需要排序的下标</span><br><span class="line">            int low=start;</span><br><span class="line">            int high=end;</span><br><span class="line">            //循环找比标准数大的数和比标准数小的数</span><br><span class="line">            while (low&lt;high)&#123;</span><br><span class="line">                //右边的数字比标准数字大</span><br><span class="line">                while (low&lt;high&amp;&amp;stard&lt;=arr[high])&#123;</span><br><span class="line">                    high--;</span><br><span class="line">                &#125;</span><br><span class="line">                //使用右边的数字替换左边的数字</span><br><span class="line">                arr[low]=arr[high];</span><br><span class="line">                //如果左边的数字比标准数小</span><br><span class="line">                while (low&lt;high&amp;&amp;arr[low]&lt;=stard)&#123;</span><br><span class="line">                    low++;</span><br><span class="line">                &#125;</span><br><span class="line">                arr[high]=arr[low];</span><br><span class="line">            &#125;</span><br><span class="line">            //把标准数赋值给低位的元素</span><br><span class="line">            arr[low]=stard;</span><br><span class="line">            //处理所有小的数字</span><br><span class="line">            quickSort(arr,start,low);</span><br><span class="line">            //处理所有大的数字</span><br><span class="line">            quickSort(arr,low+1,end);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="直接插入排序"><a href="#直接插入排序" class="headerlink" title="直接插入排序"></a>直接插入排序</h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/1156494-936d9f02b6aac880.gif" alt="直接插入排序" title="">
+                </div>
+                <div class="image-caption">直接插入排序</div>
+            </figure>
+<ul>
+<li>算法思想：<br>将数组中的所有元素依次跟前面已经排好的元素相比较，如果选择的元素比已排序的元素小，则交换，直到全部元素都比较过。<br>因此，从上面的描述中我们可以发现，直接插入排序可以用两个循环完成：</li>
+</ul>
+<ol>
+<li>第一层循环：遍历待比较的所有数组元素</li>
+<li>第二层循环：将本轮选择的元素(selected)与已经排好序的元素(ordered)相比较。<br>如果：selected &gt; ordered，那么将二者交换</li>
+</ol>
+<ul>
+<li>代码实现</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">package com.example.demo.排序算法.插入排序.直接插入排序;</span><br><span class="line"></span><br><span class="line">import java.util.Arrays;</span><br><span class="line"></span><br><span class="line">public class InsertSort &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int arr[]=&#123;4,2,5,1,66,9&#125;;</span><br><span class="line">        insertSort(arr);</span><br><span class="line">        Arrays.stream(arr).forEach(value -&gt; System.out.print(value+&quot; &quot;));</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void  insertSort(int[] arr)&#123;</span><br><span class="line">        //遍历所有数字</span><br><span class="line">        for (int i = 1; i &lt;arr.length ; i++) &#123;</span><br><span class="line">            if (arr[i]&lt;arr[i-1])&#123;</span><br><span class="line">                //把当前遍历的数字存起来</span><br><span class="line">                int temp=arr[i];</span><br><span class="line">                int j;</span><br><span class="line">                //遍历当前数字前面所有数字</span><br><span class="line">                for ( j = i-1; j &gt;=0&amp;&amp;arr[j]&gt;temp ; j--) &#123;</span><br><span class="line">                    //把前一个数字赋值给后一个数字</span><br><span class="line">                    arr[j+1]=arr[j];</span><br><span class="line">                &#125;</span><br><span class="line">                //把临时变量（外层for循环的当前元素）赋值给不满足条件的后一个值</span><br><span class="line">                arr[j+1]=temp;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a>希尔排序</h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/1156494-80700e24aed3d83e.png" alt="希尔排序" title="">
+                </div>
+                <div class="image-caption">希尔排序</div>
+            </figure>
+<ul>
+<li>算法思想：<br>将待排序数组按照步长gap进行分组，然后将每组的元素利用直接插入排序的方法进行排序；每次将gap折半减小，循环上述操作；当gap=1时，利用直接插入，完成排序。<br>同样的：从上面的描述中我们可以发现：希尔排序的总体实现应该由三个循环完成：</li>
+</ul>
+<ol>
+<li>第一层循环：将gap依次折半，对序列进行分组，直到gap=1</li>
+<li>第二、三层循环：也即直接插入排序所需要的两次循环。具体描述见上。</li>
+</ol>
+<ul>
+<li>代码实现</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">package com.example.demo.排序算法.插入排序.希尔排序;</span><br><span class="line"></span><br><span class="line">import java.util.Arrays;</span><br><span class="line"></span><br><span class="line">public class ShellSort &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int arr[]=&#123;4,2,5,1,66,9,0&#125;;</span><br><span class="line">        shellSort(arr);</span><br><span class="line">        Arrays.stream(arr).forEach(value -&gt; System.out.print(value+&quot; &quot;));</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void  shellSort(int[] arr)&#123;</span><br><span class="line">        //遍历所有的步长</span><br><span class="line">        for (int d = arr.length/2; d &gt;0 ; d/=2) &#123;</span><br><span class="line">            //遍历所有的元素</span><br><span class="line">            for (int i = d; i &lt;arr.length ; i++) &#123;</span><br><span class="line">                //遍历本组中所有的元素</span><br><span class="line">                for (int j = i-d; j &gt;=0 ; j-=d) &#123;</span><br><span class="line">                    //如果当前元素大于加上步长后的元素</span><br><span class="line">                    if (arr[j]&gt;arr[j+d])&#123;</span><br><span class="line">                        int temp=arr[j];</span><br><span class="line">                        arr[j]=arr[j+d];</span><br><span class="line">                        arr[j+d]=temp;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="简单选择排序"><a href="#简单选择排序" class="headerlink" title="简单选择排序"></a>简单选择排序</h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/1156494-25821a7cb5aec881.gif" alt="简单选择排序" title="">
+                </div>
+                <div class="image-caption">简单选择排序</div>
+            </figure>
+<ul>
+<li>算法思想：比较+交换。</li>
+</ul>
+<ol>
+<li>从待排序序列中，找到关键字最小的元素；</li>
+<li>如果最小元素不是待排序序列的第一个元素，将其和第一个元素互换；</li>
+<li>从余下的 N - 1 个元素中，找出关键字最小的元素，重复(1)、(2)步，直到排序结束。<br>因此我们可以发现，简单选择排序也是通过两层循环实现。<br>第一层循环：依次遍历序列当中的每一个元素<br>第二层循环：将遍历得到的当前元素依次与余下的元素进行比较，符合最小元素的条件，则交换。</li>
+</ol>
+<ul>
+<li>代码实现</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">package com.example.demo.排序算法.选择排序.简单选择排序;</span><br><span class="line"></span><br><span class="line">import java.util.Arrays;</span><br><span class="line"></span><br><span class="line">public class SelectSort &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int arr[]=&#123;4,2,5,1,66,9,0&#125;;</span><br><span class="line">        selectSort(arr);</span><br><span class="line">        Arrays.stream(arr).forEach(value -&gt; System.out.print(value+&quot; &quot;));</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //选择排序</span><br><span class="line">    private static void  selectSort(int[] arr)&#123;</span><br><span class="line">        //遍历所有的数</span><br><span class="line">        for (int i = 0; i &lt; arr.length; i++) &#123;</span><br><span class="line">            int minIndex=i;</span><br><span class="line">            //把当前遍历的数和后面所有的数字依次进行比较，并记录下最小的数字的下标</span><br><span class="line">            for (int j = i+1; j &lt;arr.length ; j++) &#123;</span><br><span class="line">                //后边比较的数字比记录的数字小</span><br><span class="line">                if (arr[minIndex]&gt;arr[j])&#123;</span><br><span class="line">                    //记录下最下数字的下标</span><br><span class="line">                    minIndex=j;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            //如果最小的数 和当前遍历的下标不一致  说明</span><br><span class="line">            if (i!=minIndex)&#123;</span><br><span class="line">                int temp=arr[i];</span><br><span class="line">                arr[i]=arr[minIndex];</span><br><span class="line">                arr[minIndex]=temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h1><ul>
+<li>堆的概念</li>
+</ul>
+<p>堆：本质是一种数组对象。特别重要的一点性质：<b>任意的叶子节点小于（或大于）它所有的父节点</b>。对此，又分为大顶堆和小顶堆，大顶堆要求节点的元素都要大于其孩子，小顶堆要求节点元素都小于其左右孩子，两者对左右孩子的大小关系不做任何要求。<br>利用堆排序，就是基于大顶堆或者小顶堆的一种排序方法。下面，我们通过大顶堆来实现。</p>
+<ul>
+<li>基本思想</li>
+</ul>
+<p>堆排序可以按照以下步骤来完成：</p>
+<ol>
+<li><p>首先将序列构建称为大顶堆；（这样满足了大顶堆那条性质：位于根节点的元素一定是当前序列的最大值）</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/1156494-596eee6397817ca2.png" alt="构建大顶堆" title="">
+                </div>
+                <div class="image-caption">构建大顶堆</div>
+            </figure>
+</li>
+<li><p>取出当前大顶堆的根节点，将其与序列末尾元素进行交换；（此时：序列末尾的元素为已排序的最大值；由于交换了元素，当前位于根节点的堆并不一定满足大顶堆的性质）</p>
+</li>
+<li><p>对交换后的n-1个序列元素进行调整，使其满足大顶堆的性质；</p>
+</li>
+</ol>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/1156494-7e5c63ce1ed48ebf.png" alt="大顶堆" title="">
+                </div>
+                <div class="image-caption">大顶堆</div>
+            </figure>   
+<ol start="4">
+<li>重复2.3步骤，直至堆中只有1个元素为止      </li>
+</ol>
+<ul>
+<li>代码实现</li>
+</ul>
+<pre><code>package com.example.demo.排序算法.选择排序.堆排序;
+
+import java.util.Arrays;
+
+public class HeapSort {
+
+    public static void main(String[] args) {
+        int [] arr=new int[]{9,6,8,7,0,1,10,4,2};
+        heapSort(arr);
+        Arrays.stream(arr).forEach(value -&gt; System.out.print(value+&quot; &quot;));
+    }
+
+    public static void heapSort(int[] arr){
+        /*//开始位置为最后一个非叶子节点 ，即最后一个节点父节点
+        int start=(arr.length-1)/2;
+        //结束位置  为长度-1
+        for (int i = start; i &gt;=0 ; i--) {
+            maxHeap(arr,arr.length,i);
+        }
+        Arrays.stream(arr).forEach(value -&gt; System.out.print(value+&quot; &quot;));
+        System.out.println(&quot; &quot;);
+
+        //先把数组中的第0个和最后一个进行交换  再把前面的处理为大顶堆
+        for (int i =arr.length-1 ; i &gt;0 ;i--) {
+            int temp=arr[0];
+            arr[0]=arr[i];
+            arr[i]=temp;
+            maxHeap(arr,i,0);
+        }*/
+        //开始位置是最后一个非叶子节点，即最后一个节点的父节点
+        int start = (arr.length-1)/2;
+        //调整为大顶堆
+        for(int i=start;i&gt;=0;i--) {
+            maxHeap(arr, arr.length, i);
+        }
+        //先把数组中的第0个和堆中的最后一个数交换位置，再把前面的处理为大顶堆
+        for(int i=arr.length-1;i&gt;0;i--) {
+            int temp = arr[0];
+            arr[0]=arr[i];
+            arr[i]=temp;
+            maxHeap(arr, i, 0);
+        }
+    }
+
+    public static void maxHeap(int[] arr,int size,int index){
+        //左子节点
+        int leftNode=2*index+1;
+        //右子节点
+        int rightNode=2*index+2;
+        int max=index;
+        //和两个子节点分别对比  找出最大的
+        if (leftNode&lt;size&amp;&amp;arr[leftNode]&gt;arr[max]){
+            max=leftNode;
+        }
+        if (rightNode&lt;size&amp;&amp;  arr[rightNode]&gt;arr[max ]){
+            max=rightNode;
+        }
+        //交换位置
+        if (max!=index){
+            int temp=arr[index];
+            arr[index]=arr[max];
+            arr[max]=temp;
+            //交换位置以后可能会破坏之前排好的堆，所以，之前的排好的堆需要重新调整
+            maxHeap(arr,size,max);
+        }
+    }
+}
+</code></pre><h1 id="简单选择排序-1"><a href="#简单选择排序-1" class="headerlink" title="简单选择排序"></a>简单选择排序</h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/1156494-0597aa6877e219f0.gif" alt="归并排序" title="">
+                </div>
+                <div class="image-caption">归并排序</div>
+            </figure>
+<ul>
+<li><p>算法思想：<br>归并排序是建立在归并操作上的一种有效的排序算法，该算法是采用分治法的一个典型的应用。它的基本操作是：将已有的子序列合并，达到完全有序的序列；即先使每个子序列有序，再使子序列段间有序。<br>归并排序其实要做两件事： <strong>拆分</strong>+<strong>合并</strong></p>
+</li>
+<li><p><strong>分解</strong>—-将序列每次折半拆分<br>在这里，我们采用递归的方法，首先将待排序列分成A,B两组；然后重复对A、B序列<br>分组；直到分组后组内只有一个元素，此时我们认为组内所有元素有序，则分组结束。</p>
+</li>
+<li><strong>合并</strong>—-将划分后的序列段两两排序合并<br>L[first…mid]为第一段，L[mid+1…last]为第二段，并且两端已经有序，现在我们要将两端合成达到L[first…last]并且也有序。<ol>
+<li>首先依次从第一段与第二段中取出元素比较，将较小的元素赋值给temp[]</li>
+<li>重复执行上一步，当某一段赋值结束，则将另一段剩下的元素赋值给temp[]</li>
+<li>此时将temp[]中的元素复制给L[]，则得到的L[first…last]有序</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li>代码实现</li>
+</ul>
+<pre><code>package com.example.demo.排序算法.归并排序;
+
+import java.util.Arrays;
+
+public class MergeSort {
+
+    public static void main(String[] args) {
+        int arr[]={1,3,5,2,4,6,8,10};
+        mergeSort(arr,0,arr.length-1);
+        Arrays.stream(arr).forEach(value -&gt; System.out.print(value+&quot; &quot;));
+
+    }
+
+
+    //归并排序
+    private static void mergeSort(int [] arr,int low,int hign){
+        int middle=(hign+low)/2;
+        if(low&lt;hign){
+            mergeSort(arr,low,middle);
+            mergeSort(arr,middle+1,hign);
+            merge(arr,low,middle,hign);
+        }
+    }
+
+    //归并排序
+    private static void  merge(int[] arr,int low,int middle,int high){
+        //用于存储归并的临时数组
+        int[] temp=new int[high-low+1];
+        //记录第一个数组需要遍历的下标
+        int i=low;
+        //记录第二个数组需要遍历的下标
+        int j=middle+1;
+        //用于记录在临时数组中存放的下标
+        int index=0;
+        //遍历两个数组 取出小的数字放入临时数组中
+        while (i&lt;=middle&amp;&amp;j&lt;=high){
+            if (arr[i]&lt;=arr[j]){
+                temp[index]=arr[i];
+                i++;
+            }else {
+                temp[index]=arr[j];
+                j++;
+            }
+            index++;
+        }
+
+        //处理多余的数据
+        while (j&lt;=high){
+            temp[index]=arr[j];
+            j++;
+            index++;
+        }
+        while (i&lt;=middle){
+            temp[index]=arr[i];
+            i++;
+            index++;
+        }
+
+        for (int k = 0; k &lt; temp.length; k++) {
+            arr[k+low]=temp[k];
+        }
+
+    }
+}
+</code></pre><h1 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a>基数排序</h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/1156494-70872a75238d1269.gif" alt="基数排序" title="">
+                </div>
+                <div class="image-caption">基数排序</div>
+            </figure>
+<ul>
+<li>算法思想：通过序列中各个元素的值，对排序的N个元素进行若干趟的“分配”与“收集”来实现排序。</li>
+</ul>
+<ol>
+<li>分配：我们将L[i]中的元素取出，首先确定其个位上的数字，根据该数字分配到与之序号相同的桶中</li>
+<li>收集：当序列中所有的元素都分配到对应的桶中，再按照顺序依次将桶中的元素收集形成新的一个待排序列L[ ]</li>
+<li>对新形成的序列L[]重复执行分配和收集元素中的十位、百位…直到分配完该序列中的最高位，则排序结束</li>
+</ol>
+<ul>
+<li>代码实现</li>
+</ul>
+<pre><code>package com.example.demo.排序算法.基数排序;
+
+import java.util.Arrays;
+
+public class RadixSort {
+
+    public static void main(String[] args) {
+        int arr[]={413,2,522,12,66,9,10,4562};
+        radixSort(arr);
+        Arrays.stream(arr).forEach(value -&gt; System.out.print(value+&quot; &quot;));
+
+    }
+
+    //选择排序
+    private static void  radixSort(int[] arr){
+        //存数组中最大的数字
+        int max=Integer.MIN_VALUE;
+        for (int i = 0; i &lt; arr.length; i++) {
+            if (arr[i]&gt;max){
+                max=arr[i];
+            }
+        }
+        //计算最大数字位数
+        int maxLength = (max + &quot;&quot;).length();
+        //创建一个二维数组  用于临时存储数据
+        int [] [] temp=new int[10][arr.length];
+
+        //用于记录在temp中相对应数组中存放数字的数量
+        int [] counts=new int[10];
+
+        //根据最大长度的数决定比较的次数
+        for (int i = 0,n=1; i &lt; maxLength; i++,n*=10) {
+            //把每一个数字分别计算余数
+            for (int j = 0; j &lt; arr.length; j++) {
+                //拿到余数
+                int reminder=arr[j]/n%10;
+                temp[reminder][counts[reminder]]=arr[j];
+                //记录数量
+                counts[reminder]++;
+            }
+            //记录取出的数字需要放的位置
+            int index=0;
+            //把数字取出来
+            for (int j = 0; j &lt; counts.length; j++) {
+                //counts不为0才取
+                if (counts[j]!=0){
+                    //取出元素
+                    for (int k = 0; k &lt;counts[j]; k++) {
+                        arr[index]=temp[j][k];
+                        index++;
+                    }
+                    //把数量置空为0
+                    counts[j]=0;
+                }
+            }
+        }
+    }
+}
+</code></pre><ul>
+<li>优化: 用队列代替二维数组</li>
+</ul>
+<pre><code>package com.example.demo.排序算法.基数排序;
+
+import com.example.demo.线性结构.队列.MyQueue;
+
+import java.util.Arrays;
+
+
+//基数排序优化
+public class QueueRadixSort {
+
+    public static void main(String[] args) {
+        int arr[]={413,2,522,12,66,9,10,4562};
+        radixSort(arr);
+        Arrays.stream(arr).forEach(value -&gt; System.out.print(value+&quot; &quot;));
+
+}
+
+    //选择排序
+    private static void  radixSort(int[] arr){
+        //存数组中最大的数字
+        int max=Integer.MIN_VALUE;
+        for (int i = 0; i &lt; arr.length; i++) {
+            if (arr[i]&gt;max){
+                max=arr[i];
+            }
+        }
+        //计算最大数字位数
+        int maxLength = (max + &quot;&quot;).length();
+        //创建一个队列数组  用于临时存储数据
+        MyQueue [] temp=new MyQueue[10];
+        //为队列数组赋值
+        for (int i = 0; i &lt;temp.length ; i++) {
+            temp[i]=new MyQueue();
+        }
+        //根据最大长度的数决定比较的次数
+        for (int i = 0,n=1; i &lt; maxLength; i++,n*=10) {
+            //把每一个数字分别计算余数
+            for (int j = 0; j &lt; arr.length; j++) {
+                //拿到余数
+                int reminder=arr[j]/n%10;
+                //将当前遍历的数据放入指定的队列当中
+                temp[reminder].add(arr[j]);
+            }
+            //记录取出的数字需要放的位置
+            int index=0;
+            //把所有队列中数字取出来
+            for (int K = 0; K &lt; temp.length; K++) {
+                    ////当前队列不为空才取出元素
+                   while (!temp[K].isEmpty()){
+                        arr[index]=temp[K].poll();
+                       index++;
+                   }
+            }
+        }
+    }
+}
+
+
+
+
+
+package com.example.demo.线性结构.队列;
+
+public class MyQueue {
+
+    int[] elements;
+
+    public MyQueue(){
+        elements=new int[0];
+    }
+
+    //入队
+    public void add(int element){
+        //创建一个新数组
+        int [] newArr=new int[elements.length+1];
+        //把原数组的元素复制到新数组
+        for (int i = 0; i &lt; elements.length; i++) {
+            newArr[i]=elements[i];
+        }
+        //把添加的元素 添加到新数组中
+        newArr[elements.length]=element;
+        //使用新数组替换旧数组
+        elements=newArr;
+    }
+
+    //出队
+    public int poll(){
+        if(elements.length==0){
+            throw  new  RuntimeException(&quot;stack is empty&quot;);
+        }
+        int element=elements[0];
+        int [] newArr=new int[elements.length-1];
+        for (int i = 0; i &lt; newArr.length; i++) {
+            newArr[i]=elements[i+1];
+        }
+        elements=newArr;
+
+        return element;
+    }
+
+
+    //判断队列是否为空
+    public boolean isEmpty(){
+        return elements.length==0;
+    }
+}
+</code></pre>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-03-31T09:02:41.058Z" itemprop="dateUpdated">2020-03-31 17:02:41</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://springcloud.xn--ses554g">
+            <img src="/img/123.png" alt="Edward">
+            Edward
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/学习/">学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/面试/">面试</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://springcloud.xn--ses554g/2020/03/31/八大排序算法/&title=《八大排序算法》 — Edward&pic=http://springcloud.xn--ses554g/img/123.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://springcloud.xn--ses554g/2020/03/31/八大排序算法/&title=《八大排序算法》 — Edward&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://springcloud.xn--ses554g/2020/03/31/八大排序算法/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《八大排序算法》 — Edward&url=http://springcloud.xn--ses554g/2020/03/31/八大排序算法/&via=http://springcloud.xn--ses554g" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://springcloud.xn--ses554g/2020/03/31/八大排序算法/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/04/01/常见面试题知识点归档/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">常见面试题知识点归档</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/03/30/Redis常见面试题目/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Redis常见面试题目</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "NHOU6qcrdobSwD5wwUJJ31pQ-gzGzoHsz",
+            appKey: "E0RJgPMPwkjfMBOA88EalSzJ",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv">
+        站点总访客数：30<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv">
+        站点总访问量：425<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Edward &copy; 2015 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://springcloud.xn--ses554g/2020/03/31/八大排序算法/&title=《八大排序算法》 — Edward&pic=http://springcloud.xn--ses554g/img/123.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://springcloud.xn--ses554g/2020/03/31/八大排序算法/&title=《八大排序算法》 — Edward&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://springcloud.xn--ses554g/2020/03/31/八大排序算法/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《八大排序算法》 — Edward&url=http://springcloud.xn--ses554g/2020/03/31/八大排序算法/&via=http://springcloud.xn--ses554g" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://springcloud.xn--ses554g/2020/03/31/八大排序算法/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJ0lEQVR42u3aQW7DMAwEwPz/0+61QGB7SboFZI1OQeNUGh8IUuTnE6/jZP3+9vvJ/L/lvx0tDAyMZRnH5TrbINns+5kjXvnZMDAw9mFcH+LsQJNAeY3Mz4aBgYFRDa857zq5xMDAwHgq4OZJ3iSUY2BgYOTFZK+gPSPlpfLDtTgGBsaCjGrB+Z+f/6S/gYGBsRTjKK68GTl/pnAqDAyMVzN6V2lPpYmTgIuBgbEPozrClSeOeamZX+p95kfEwMBYkJEkZ9WBiWqo7TUnyneHGBgYizOSDXojFNXXVOVhYGDsw8jbjT1YNX2cX95hYGC8idEb28rDaO/qrRleMTAwXsroDVv0hjASXvJSHhjLwMDAWIqRpHf5uEMyeNprJNyQMDAwNmDkmHkLIR+waN4XYmBgvJSRDDpUw25OzVPGB+Y1MDAwlmVUr70mrc1eAnqzOwYGxqsZyYHyIYn8FVTL1+jvGBgYGzB6TYJeQVu94Iu+xcDA2IYxuRSblLjVK7abgIuBgbEBY57MVVuS179N2hUYGBj7MHpDXXmQzZNFDAwMjOrIRRVWbSpMil4MDIx3M3rjFL3yNWkSJGG3MGyBgYHxCsYk2FW36SELwxYYGBivZkxGsqrjF9U2QCHgYmBgbMDIA1+1cH027bvJczEwMDD+bMCiOniBgYGBkadxOXsSvhM2BgbGDox5WJzc8E1aERgYGDswJqXjU42BPASPmpoYGBjrMX4AlabbGXfDg+QAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false}});</script></body>
+</html>

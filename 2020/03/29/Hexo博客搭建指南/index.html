@@ -59,6 +59,7 @@
             s.parentNode.insertBefore(bp, s);
         })();
     </script>
+
 </head>
 
 <body>
@@ -89,52 +90,67 @@
                 主页
               </a>
             </li>
-        
+          
             <li class="waves-block waves-effect">
               <a href="/archives">
                 <i class="icon icon-lg icon-archives"></i>
                 Archives
               </a>
             </li>
-        
+          
             <li class="waves-block waves-effect">
               <a href="/tags">
                 <i class="icon icon-lg icon-tags"></i>
                 Tags
               </a>
             </li>
-        
+          
             <li class="waves-block waves-effect">
               <a href="/categories">
                 <i class="icon icon-lg icon-th-list"></i>
                 Categories
               </a>
             </li>
-        
+          
             <li class="waves-block waves-effect">
               <a href="https://github.com/zqmssbd" target="_blank">
                 <i class="icon icon-lg icon-github"></i>
                 Github
               </a>
             </li>
-        
+          
             <li class="waves-block waves-effect">
               <a href="https://weibo.com/5333276247" target="_blank">
                 <i class="icon icon-lg icon-weibo"></i>
                 Weibo
               </a>
             </li>
-        
+          
             <li class="waves-block waves-effect">
               <a href="https://gitee.com/Edward-Z" target="_blank">
                 <i class="icon icon-lg icon-link"></i>
                 码云
               </a>
             </li>
-        
+          
       </ul>
+        <div id="tp-weather-widget"></div>
+        <script>
+            (function(a,h,g,f,e,d,c,b){b=function(){d=h.createElement(g);c=h.getElementsByTagName(g)[0];d.src=e;d.charset="utf-8";d.async=1;c.parentNode.insertBefore(d,c)};a["SeniverseWeatherWidgetObject"]=f;a[f]||(a[f]=function(){(a[f].q=a[f].q||[]).push(arguments)});a[f].l=+new Date();if(a.attachEvent){a.attachEvent("onload",b)}else{a.addEventListener("load",b,false)}}(window,document,"script","SeniverseWeatherWidget","//cdn.sencdn.com/widget2/static/js/bundle.js?t="+parseInt((new Date().getTime() / 100000000).toString(),10)));
+            window.SeniverseWeatherWidget('show', {
+                flavor: "bubble",
+                location: "WT3Q0FW9ZJ3Q",
+                geolocation: true,
+                language: "zh-Hans",
+                unit: "c",
+                theme: "auto",
+                token: "74eabe8a-0b6b-4a56-86ac-c773a4d98218",
+                hover: "enabled",
+                container: "tp-weather-widget"
+            })
+        </script>
       <div>
-          <iframe frameborder="yes" border="80" marginwidth="80" marginheight="80" width="242" height="84" src="//music.163.com/outchain/player?type=2&id=495260242&auto=0&height=66"></iframe>
+          <iframe frameborder="yes" border="80" marginwidth="80" marginheight="80" width="240" height="84" src="//music.163.com/outchain/player?type=2&id=495260242&auto=0&height=66"></iframe>
       </div>
     </div>
   </div>
@@ -185,7 +201,20 @@
 
     
 
-
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https'){
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else{
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
 </header>
 
 
@@ -427,9 +456,9 @@
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="waves-block waves-effect prev">
-      <a href="/2020/03/30/三种实现分布式锁的方式/" id="post-prev" class="post-nav-link">
+      <a href="/2020/03/30/分布式事务/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">三种实现分布式锁的方式</h4>
+        <h4 class="title">分布式事务</h4>
       </a>
     </div>
   
