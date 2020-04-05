@@ -33,7 +33,7 @@
 <meta property="og:image" content="http://springcloud.xn--ses554g/img/20190401230016993.png">
 <meta property="og:image" content="http://springcloud.xn--ses554g/img/20190401230750555.png">
 <meta property="og:image" content="http://springcloud.xn--ses554g/img/2019050616233835.png">
-<meta property="og:updated_time" content="2020-04-05T08:39:01.646Z">
+<meta property="og:updated_time" content="2020-04-05T08:41:46.538Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RabbitMQ消息100%可靠性投递的解决方案实现(一)">
 <meta name="twitter:description" content="消息如何保证100%投递成功什么是生产端的可靠性投递保障消息的成功发出保障MQ节点的成功接收发送端收到MQ节点(Broker)确认应答完善的消息进行补偿机制 生产端-可靠性传递常见解决方案：消息落库，对消息状态进行打标">
@@ -158,7 +158,7 @@
 
         
           <div>
-              <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="240" height="110" loading="lazy" sandbox="allow-popups allow-scripts allow-same-origin" src="//www.xiami.com/webapp/embed-player?autoPlay=0&id=bqvdan93b259"></iframe>
+              <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="240" height="110" loading="lazy" sandbox="allow-popups allow-scripts allow-same-origin" src="//www.xiami.com/webapp/embed-player?auto=0&id=bqvdan93b259"></iframe>
           </div>
         
 
@@ -340,6 +340,7 @@
 <p>当执行<strong>channel.basicPublish(exchange,routingKeyError,true,null,message.getBytes());</strong>消息发送失败，因为路由失败了嘛，生产端能看到如下打印：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">——handle return——</span><br><span class="line">replyCode:312</span><br><span class="line">replyText:NO_ROUTE</span><br><span class="line">exchange1:test_return_exchange</span><br><span class="line">routingKey1:abc.save</span><br><span class="line">properties:#contentHeader&lt;basic&gt;(content-type=null, content-encoding=null, headers=null, delivery-mode=null, priority=null, correlation-id=null, reply-to=null, expiration=null, message-id=null, timestamp=null, type=null, user-id=null, app-id=null, cluster-id=null)</span><br><span class="line">body:Hello Return Message</span><br></pre></td></tr></table></figure>
 <p><strong>若生产端将mandatory设为false,则ReturnListener不会进行回调</strong></p>
+<p><a href="http://springcloud.xn--ses554g/2020/04/05/Rabbitmq%E7%9A%84Confirm%E5%92%8CReturn/">springboot整合rabbitmq实现消息Confirm和Return机制</a></p>
 
         </div>
 
@@ -348,7 +349,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2020-04-05T08:39:01.646Z" itemprop="dateUpdated">2020-04-05 16:39:01</time>
+    最后更新时间：<time datetime="2020-04-05T08:41:46.538Z" itemprop="dateUpdated">2020-04-05 16:41:46</time>
 </span><br>
 
 
