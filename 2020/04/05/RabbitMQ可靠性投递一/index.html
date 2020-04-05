@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>RabbitMQ消息100%可靠性投递的解决方案实现(一) | Edward</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="学习,RabbitMQ">
+    <meta name="description" content="消息如何保证100%投递成功什么是生产端的可靠性投递保障消息的成功发出保障MQ节点的成功接收发送端收到MQ节点(Broker)确认应答完善的消息进行补偿机制 生产端-可靠性传递常见解决方案：消息落库，对消息状态进行打标">
+<meta name="keywords" content="学习,RabbitMQ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RabbitMQ消息100%可靠性投递的解决方案实现(一)">
+<meta property="og:url" content="http://springcloud.xn--ses554g/2020/04/05/RabbitMQ可靠性投递一/index.html">
+<meta property="og:site_name" content="Edward">
+<meta property="og:description" content="消息如何保证100%投递成功什么是生产端的可靠性投递保障消息的成功发出保障MQ节点的成功接收发送端收到MQ节点(Broker)确认应答完善的消息进行补偿机制 生产端-可靠性传递常见解决方案：消息落库，对消息状态进行打标">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/20190401225804455.png">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/20190401230016993.png">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/20190401230750555.png">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/2019050616233835.png">
+<meta property="og:updated_time" content="2020-04-05T08:39:01.646Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RabbitMQ消息100%可靠性投递的解决方案实现(一)">
+<meta name="twitter:description" content="消息如何保证100%投递成功什么是生产端的可靠性投递保障消息的成功发出保障MQ节点的成功接收发送端收到MQ节点(Broker)确认应答完善的消息进行补偿机制 生产端-可靠性传递常见解决方案：消息落库，对消息状态进行打标">
+<meta name="twitter:image" content="http://springcloud.xn--ses554g/img/20190401225804455.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Edward" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https'){
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else{
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand" style="padding-top: 30%;">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/123.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Edward</h5>
+          <a href="mailto:zqmssbd@qq.com" title="zqmssbd@qq.com" class="mail">zqmssbd@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/zqmssbd" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/5333276247" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="https://gitee.com/Edward-Z" target="_blank">
+                <i class="icon icon-lg icon-link"></i>
+                码云
+              </a>
+            </li>
+          
+      </ul>
+        <div id="tp-weather-widget"></div>
+        <script>
+            (function(a,h,g,f,e,d,c,b){b=function(){d=h.createElement(g);c=h.getElementsByTagName(g)[0];d.src=e;d.charset="utf-8";d.async=1;c.parentNode.insertBefore(d,c)};a["SeniverseWeatherWidgetObject"]=f;a[f]||(a[f]=function(){(a[f].q=a[f].q||[]).push(arguments)});a[f].l=+new Date();if(a.attachEvent){a.attachEvent("onload",b)}else{a.addEventListener("load",b,false)}}(window,document,"script","SeniverseWeatherWidget","//cdn.sencdn.com/widget2/static/js/bundle.js?t="+parseInt((new Date().getTime() / 100000000).toString(),10)));
+            window.SeniverseWeatherWidget('show', {
+                flavor: "bubble",
+                location: "WT3Q0FW9ZJ3Q",
+                geolocation: true,
+                language: "zh-Hans",
+                unit: "c",
+                theme: "auto",
+                token: "74eabe8a-0b6b-4a56-86ac-c773a4d98218",
+                hover: "enabled",
+                container: "tp-weather-widget"
+            })
+        </script>
+
+        
+
+
+        
+          <div>
+              <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="240" height="110" loading="lazy" sandbox="allow-popups allow-scripts allow-same-origin" src="//www.xiami.com/webapp/embed-player?autoPlay=0&id=bqvdan93b259"></iframe>
+          </div>
+        
+
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">RabbitMQ消息100%可靠性投递的解决方案实现(一)</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">RabbitMQ消息100%可靠性投递的解决方案实现(一)</h1>
+        <h5 class="title">你真的还不够，不够勤奋和努力。</h5>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-04-05T07:30:55.000Z" itemprop="datePublished" class="page-time">
+  2020-04-05
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/">技术文章</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/RabbitMQ/">RabbitMQ</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/RabbitMQ/中间件/">中间件</a></li></ul></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https'){
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else{
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#消息如何保证100-投递成功"><span class="post-toc-number">1.</span> <span class="post-toc-text">消息如何保证100%投递成功</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#什么是生产端的可靠性投递"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">什么是生产端的可靠性投递</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#生产端-可靠性传递"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">生产端-可靠性传递</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#常见解决方案："><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">常见解决方案：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#消息落库，对消息状态进行打标"><span class="post-toc-number">1.2.1.1.</span> <span class="post-toc-text">消息落库，对消息状态进行打标</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#消息的延迟投递，做二次确认，回调检查"><span class="post-toc-number">1.2.1.2.</span> <span class="post-toc-text">消息的延迟投递，做二次确认，回调检查</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#消息幂等性"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">消息幂等性</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#幂等性"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">幂等性</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#如何避免重复消费"><span class="post-toc-number">1.3.2.</span> <span class="post-toc-text">如何避免重复消费</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#主流解决方案"><span class="post-toc-number">1.3.3.</span> <span class="post-toc-text">主流解决方案</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#唯一ID-指纹码-机制"><span class="post-toc-number">1.3.3.1.</span> <span class="post-toc-text">唯一ID +指纹码 机制</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#利用Redis的原子性实现"><span class="post-toc-number">1.3.3.2.</span> <span class="post-toc-text">利用Redis的原子性实现</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#投递消息机制"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">投递消息机制</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Confirm确认消息"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">Confirm确认消息</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#return返回消息"><span class="post-toc-number">1.4.2.</span> <span class="post-toc-text">return返回消息</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#return-消息机制"><span class="post-toc-number">1.4.2.1.</span> <span class="post-toc-text">return 消息机制</span></a></li></ol></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-RabbitMQ可靠性投递一" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">RabbitMQ消息100%可靠性投递的解决方案实现(一)</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-04-05 15:30:55" datetime="2020-04-05T07:30:55.000Z" itemprop="datePublished">2020-04-05</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/">技术文章</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/RabbitMQ/">RabbitMQ</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/RabbitMQ/中间件/">中间件</a></li></ul></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="消息如何保证100-投递成功"><a href="#消息如何保证100-投递成功" class="headerlink" title="消息如何保证100%投递成功"></a>消息如何保证100%投递成功</h1><h2 id="什么是生产端的可靠性投递"><a href="#什么是生产端的可靠性投递" class="headerlink" title="什么是生产端的可靠性投递"></a>什么是生产端的可靠性投递</h2><p>保障消息的成功发出<br>保障MQ节点的成功接收<br>发送端收到MQ节点(Broker)确认应答<br>完善的消息进行补偿机制</p>
+<h2 id="生产端-可靠性传递"><a href="#生产端-可靠性传递" class="headerlink" title="生产端-可靠性传递"></a>生产端-可靠性传递</h2><h3 id="常见解决方案："><a href="#常见解决方案：" class="headerlink" title="常见解决方案："></a>常见解决方案：</h3><h4 id="消息落库，对消息状态进行打标"><a href="#消息落库，对消息状态进行打标" class="headerlink" title="消息落库，对消息状态进行打标"></a>消息落库，对消息状态进行打标</h4><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/20190401225804455.png" alt="消息落库，对消息状态进行打标" title="">
+                </div>
+                <div class="image-caption">消息落库，对消息状态进行打标</div>
+            </figure>
+<p>BIZ DB：订单数据库(或其他具体业务)<br>MSG DB：消息数据库<br>第1步：将订单入库，创建一条MSG(状态为0) 入MSG DB库<br>第2步：将消息发出去<br>第3步：监听消息应答(来自Broker)<br>第4步：修改消息的状态为1(成功)<br>第5步：分布式定时任务抓取状态为0的消息<br>第6步：将状态为0的消息重发<br>第7步：如果尝试了3次(可按实际情况修改)以上则将状态置为2(消息投递失败状态)</p>
+<p>这种方案，需要<strong>入两次库，在高并发的场景下性能可能不是那么好</strong></p>
+<h4 id="消息的延迟投递，做二次确认，回调检查"><a href="#消息的延迟投递，做二次确认，回调检查" class="headerlink" title="消息的延迟投递，做二次确认，回调检查"></a>消息的延迟投递，做二次确认，回调检查</h4><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/20190401230016993.png" alt="消息的延迟投递，做二次确认，回调检查" title="">
+                </div>
+                <div class="image-caption">消息的延迟投递，做二次确认，回调检查</div>
+            </figure>
+<p>第二种方案可以避免消息对象与业务对象同时入库</p>
+<p>Upstream service：上游服务，可能为生产端<br>Downstream service：下游服务，可能为消费端<br>MQ Broker：可能为集群<br>Callback service：回调服务，监听confirm消息</p>
+<p>第1步：首先业务数据落库，成功才后第一次消息发送<br>第2步：紧着着发送第2条消息（可以用于寻找第1条消息），用于延迟(可能2,3分钟后才发送)消息投递检查<br>第3步：Broker端收到消息后，消费端进行消息处理<br>第4步：处理成功后，发送confirm消息<br>第5步：收到confirm消息后，将消息进行持久化存储<br>第6步：收到了delay消息，检查DB数据库，若对应的第1条消息已处理完成，则不做任何事情；若收到了delay消息，检查DB数据库，发现对应的第1条消息处理失败(或无记录)，则发送重传命令到上游服务，循环第1步</p>
+<h2 id="消息幂等性"><a href="#消息幂等性" class="headerlink" title="消息幂等性"></a>消息幂等性</h2><h3 id="幂等性"><a href="#幂等性" class="headerlink" title="幂等性"></a>幂等性</h3><p>比如我们执行一条更新库存的SQL语句（乐观锁）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update T_REPS set count = count - 1,version = version + 1 where version = 1</span><br></pre></td></tr></table></figure></p>
+<p>第一步，查出version<br>第二步，通过这个version进行更新</p>
+<p>可以进行幂等性保障<br>所以，啥是幂等性呢？<br>执行某个操作，无论执行多少次，结果都是一致的，就说具有幂等性。</p>
+<h3 id="如何避免重复消费"><a href="#如何避免重复消费" class="headerlink" title="如何避免重复消费"></a>如何避免重复消费</h3><p>在海量订单产生的业务高峰期，如何避免消息的重复消费？</p>
+<ul>
+<li>消费端实现幂等性，然后永远不会消费多次，即使收到多条一样的消息</li>
+</ul>
+<h3 id="主流解决方案"><a href="#主流解决方案" class="headerlink" title="主流解决方案"></a>主流解决方案</h3><p>消费端实现幂等性的主流解决方案有以下两种：</p>
+<h4 id="唯一ID-指纹码-机制"><a href="#唯一ID-指纹码-机制" class="headerlink" title="唯一ID +指纹码 机制"></a>唯一ID +指纹码 机制</h4><p>利用数据库主键去重</p>
+<p>指纹码：可能是业务规则，时间戳+具体银行范围的唯一信息码，能保障这次操作的绝对唯一</p>
+<p>比如select count(1) from T_ORDER where id = &lt;唯一ID+指纹码&gt;</p>
+<p>将唯一ID+指纹码设成主键，如果上面SQL返回1，说明已经操作了，则不需要再次操作；否则才去执行操作</p>
+<p>优点： 实现简单<br>缺点：高并发下有数据库写入的性能瓶颈（解决方案：通过ID进行分库分表进行算法路由）</p>
+<h4 id="利用Redis的原子性实现"><a href="#利用Redis的原子性实现" class="headerlink" title="利用Redis的原子性实现"></a>利用Redis的原子性实现</h4><ul>
+<li>通过setnx等命令</li>
+</ul>
+<p>SET 订单号 时间戳 过期时间</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET 1893505609317740 1466849127 EX 300 NX</span><br></pre></td></tr></table></figure>
+<p>利用Redis进行幂等，需要考虑的问题：</p>
+<p>如果要进行数据落库，关键解决的问题是数据库和缓存如何做到数据一致性。<br>如果不落库，那么都存在缓存中，如何设置定时同步的策略(同步是指将数据存储到数据库中，不落库指的是暂时不落库，不可能永远不落库)</p>
+<h2 id="投递消息机制"><a href="#投递消息机制" class="headerlink" title="投递消息机制"></a>投递消息机制</h2><h3 id="Confirm确认消息"><a href="#Confirm确认消息" class="headerlink" title="Confirm确认消息"></a>Confirm确认消息</h3><ul>
+<li>消息确认，是指生产者消息投递后，如果Broker收到消息，则会给生产者一个应答</li>
+<li>生产者进行接收应答，用来确定这条消息是否正常的发送到Broker，这种方式也是消息的可靠性投递的核心保障</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/20190401230750555.png" alt="Confirm确认消息" title="">
+                </div>
+                <div class="image-caption">Confirm确认消息</div>
+            </figure>
+<p><strong>生成者发送消息与监听confirm是异步的。</strong></p>
+<p>何实现Confirm确认消息？</p>
+<ol>
+<li>在channel上开启确认模式:channel.confirmSelect()</li>
+<li>在channel上添加监听：addConfirmListener，监听成功和失败的返回结果，根据具体返回结果对消息进行重发或日志记录等</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">public class Producer &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException, TimeoutException, InterruptedException &#123;</span><br><span class="line">        Connection connection = ConnectionUtil.getConn();</span><br><span class="line">        //1. 通过connection创建一个Channel</span><br><span class="line">        Channel channel = connection.createChannel();</span><br><span class="line">        //2.指定消息确认模式</span><br><span class="line">        channel.confirmSelect();</span><br><span class="line">        String exchangeName = &quot;test_confirm_exchange&quot;;</span><br><span class="line">        String routingKey = &quot;confirm.save&quot;;</span><br><span class="line"></span><br><span class="line">        //3. 通过Channel发送数据</span><br><span class="line">        String message = &quot;Hello from Producer&quot;;</span><br><span class="line">        channel.basicPublish(exchangeName,routingKey,null,message.getBytes());</span><br><span class="line"></span><br><span class="line">        //4. 添加一个确认监听</span><br><span class="line">        channel.addConfirmListener(new ConfirmListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void handleAck(long deliveryTag, boolean multiple) throws IOException &#123;</span><br><span class="line">                //成功的情况 deliveryTag:消息的唯一标签；</span><br><span class="line">                System.out.println(&quot;——get ack——&quot;);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void handleNack(long deliveryTag, boolean multiple) throws IOException &#123;</span><br><span class="line">                //失败的情况</span><br><span class="line">                System.out.println(&quot;——have no  ack——&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        // 关闭掉就没confirm了</span><br><span class="line">        // CloseTool.closeElegantly(channel,connection);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public class Consumer &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        Connection connection = ConnectionUtil.getConn();</span><br><span class="line"></span><br><span class="line">        //1. 通过connection创建一个Channel</span><br><span class="line">        Channel channel = connection.createChannel();</span><br><span class="line"></span><br><span class="line">        String exchangeName = &quot;test_confirm_exchange&quot;;</span><br><span class="line">        String routingKey = &quot;confirm.save&quot;;</span><br><span class="line">        String queueName = &quot;test_confirm_queue&quot;;</span><br><span class="line">        //2. 声明一个exchange</span><br><span class="line">        channel.exchangeDeclare(exchangeName,&quot;topic&quot;,true);</span><br><span class="line">        //3. 声明一个队列</span><br><span class="line">        channel.queueDeclare(queueName,true,false,false,null);</span><br><span class="line">        //4. 绑定</span><br><span class="line">        channel.queueBind(queueName,exchangeName,routingKey);</span><br><span class="line">        //5. 创建消费者</span><br><span class="line">        QueueingConsumer queueingConsumer = new QueueingConsumer(channel);</span><br><span class="line">        //6. 设置Channel</span><br><span class="line">        channel.basicConsume(queueName,true,queueingConsumer);</span><br><span class="line">        //7. 获取消息</span><br><span class="line">        while (true) &#123;</span><br><span class="line">            //nextDelivery 会阻塞直到有消息过来</span><br><span class="line">            QueueingConsumer.Delivery delivery = queueingConsumer.nextDelivery();</span><br><span class="line">            String message = new String(delivery.getBody());</span><br><span class="line">            System.out.println(&quot;收到:&quot; + message);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="return返回消息"><a href="#return返回消息" class="headerlink" title="return返回消息"></a>return返回消息</h3><ul>
+<li>Return Listener用于处理一些不可路由消息</li>
+<li>生产者指定Exchange和RoutingKey，将消息投递到某个队列，然后消费者监听队列，进行消息处理</li>
+<li>但在某些情况下，在发送消息时，若当前的exchange不存在或指定的路由key路由失败，这时，如果需要监听这种不可达的消息，则要使用return listener</li>
+</ul>
+<h4 id="return-消息机制"><a href="#return-消息机制" class="headerlink" title="return 消息机制"></a>return 消息机制</h4><p>在基础API中有一个关键的配置项：</p>
+<ul>
+<li><strong>Mandatory</strong> : 若为true,则监听器会接收到路由不可达的消息，然后进行后粗处理 ；若为false，则broker端自动删除该消息</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/2019050616233835.png" alt="return 消息机制" title="">
+                </div>
+                <div class="image-caption">return 消息机制</div>
+            </figure>
+<p>发送端发送了一条消息，但是没有发现Exchange，则可通过return listener监听这些消息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">public class Producer &#123;</span><br><span class="line">    public static final String MQ_HOST = &quot;192.168.222.101&quot;;</span><br><span class="line">    public static final String MQ_VHOST = &quot;/&quot;;</span><br><span class="line">    public static final int MQ_PORT = 5672;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException, TimeoutException &#123;</span><br><span class="line">        //1. 创建一个ConnectionFactory</span><br><span class="line">        ConnectionFactory connectionFactory = new ConnectionFactory();</span><br><span class="line">        connectionFactory.setHost(MQ_HOST);//配置host</span><br><span class="line">        connectionFactory.setPort(MQ_PORT);//配置port</span><br><span class="line">        connectionFactory.setVirtualHost(MQ_VHOST);//配置vHost</span><br><span class="line"></span><br><span class="line">        //2. 通过连接工厂创建连接</span><br><span class="line">        Connection connection = connectionFactory.newConnection();</span><br><span class="line">        //3. 通过connection创建一个Channel</span><br><span class="line">        Channel channel = connection.createChannel();</span><br><span class="line">        String exchange = &quot;test_return_exchange&quot;;</span><br><span class="line">        String routingKey = &quot;return.save&quot;;</span><br><span class="line">        String routingKeyError = &quot;abc.save&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        //4. 通过Channel发送数据</span><br><span class="line">        String message = &quot;Hello Return Message&quot;;</span><br><span class="line"></span><br><span class="line">        channel.addReturnListener((replyCode, replyText, exchange1, routingKey1, properties, body) -&gt; &#123;</span><br><span class="line">            System.out.println(&quot;——handle return——&quot;);</span><br><span class="line">            System.out.println(&quot;replyCode:&quot; + replyCode);</span><br><span class="line">            System.out.println(&quot;replyText:&quot; + replyText);</span><br><span class="line">            System.out.println(&quot;exchange1:&quot; + exchange1);</span><br><span class="line">            System.out.println(&quot;routingKey1:&quot; + routingKey1);</span><br><span class="line">            System.out.println(&quot;properties:&quot; + properties);</span><br><span class="line">            System.out.println(&quot;body:&quot; + new String(body));</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        //mandatory : true</span><br><span class="line">        //channel.basicPublish(exchange,routingKey,true,null,message.getBytes());</span><br><span class="line">        channel.basicPublish(exchange,routingKeyError,true,null,message.getBytes());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public class Consumer &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        Connection connection = ConnectionUtil.getConn();</span><br><span class="line"></span><br><span class="line">        //1. 通过connection创建一个Channel</span><br><span class="line">        Channel channel = connection.createChannel();</span><br><span class="line"></span><br><span class="line">        String exchange = &quot;test_return_exchange&quot;;</span><br><span class="line">        String routingKey = &quot;return.#&quot;;</span><br><span class="line">        String queueName = &quot;test_return_queue&quot;;</span><br><span class="line"></span><br><span class="line">        //2. 声明一个exchange</span><br><span class="line">        channel.exchangeDeclare(exchange,&quot;topic&quot;,true,false,null);</span><br><span class="line">        //3. 声明一个队列</span><br><span class="line">        channel.queueDeclare(queueName,true,false,false,null);</span><br><span class="line">        //4. 绑定</span><br><span class="line">        channel.queueBind(queueName,exchange,routingKey);</span><br><span class="line">        //5. 创建消费者</span><br><span class="line">        QueueingConsumer queueingConsumer = new QueueingConsumer(channel);</span><br><span class="line">        //6. 设置Channel</span><br><span class="line">        channel.basicConsume(queueName,true,queueingConsumer);</span><br><span class="line">        //7. 获取消息</span><br><span class="line">        while (true) &#123;</span><br><span class="line">            //nextDelivery 会阻塞直到有消息过来</span><br><span class="line">            QueueingConsumer.Delivery delivery = queueingConsumer.nextDelivery();</span><br><span class="line">            String message = new String(delivery.getBody());</span><br><span class="line">            System.out.println(&quot;收到:&quot; + message);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当生产端执行<strong>channel.basicPublish(exchange,routingKey,true,null,message.getBytes());</strong>消息能发送成功，也可以从消费端看到打印</p>
+<p>当执行<strong>channel.basicPublish(exchange,routingKeyError,true,null,message.getBytes());</strong>消息发送失败，因为路由失败了嘛，生产端能看到如下打印：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">——handle return——</span><br><span class="line">replyCode:312</span><br><span class="line">replyText:NO_ROUTE</span><br><span class="line">exchange1:test_return_exchange</span><br><span class="line">routingKey1:abc.save</span><br><span class="line">properties:#contentHeader&lt;basic&gt;(content-type=null, content-encoding=null, headers=null, delivery-mode=null, priority=null, correlation-id=null, reply-to=null, expiration=null, message-id=null, timestamp=null, type=null, user-id=null, app-id=null, cluster-id=null)</span><br><span class="line">body:Hello Return Message</span><br></pre></td></tr></table></figure>
+<p><strong>若生产端将mandatory设为false,则ReturnListener不会进行回调</strong></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-04-05T08:39:01.646Z" itemprop="dateUpdated">2020-04-05 16:39:01</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://springcloud.xn--ses554g">
+            <img src="/img/123.png" alt="Edward">
+            Edward
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RabbitMQ/">RabbitMQ</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/学习/">学习</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://springcloud.xn--ses554g/2020/04/05/RabbitMQ可靠性投递一/&title=《RabbitMQ消息100%可靠性投递的解决方案实现(一)》 — Edward&pic=http://springcloud.xn--ses554g/img/123.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://springcloud.xn--ses554g/2020/04/05/RabbitMQ可靠性投递一/&title=《RabbitMQ消息100%可靠性投递的解决方案实现(一)》 — Edward&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://springcloud.xn--ses554g/2020/04/05/RabbitMQ可靠性投递一/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《RabbitMQ消息100%可靠性投递的解决方案实现(一)》 — Edward&url=http://springcloud.xn--ses554g/2020/04/05/RabbitMQ可靠性投递一/&via=http://springcloud.xn--ses554g" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://springcloud.xn--ses554g/2020/04/05/RabbitMQ可靠性投递一/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/04/05/Rabbitmq的Confirm和Return/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">springboot整合rabbitmq实现消息Confirm和Return机制</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/04/01/常见面试题知识点归档/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">常见面试题知识点归档</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "NHOU6qcrdobSwD5wwUJJ31pQ-gzGzoHsz",
+            appKey: "E0RJgPMPwkjfMBOA88EalSzJ",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv">
+        站点总访客数：30<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv">
+        站点总访问量：425<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Edward &copy; 2015 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://springcloud.xn--ses554g/2020/04/05/RabbitMQ可靠性投递一/&title=《RabbitMQ消息100%可靠性投递的解决方案实现(一)》 — Edward&pic=http://springcloud.xn--ses554g/img/123.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://springcloud.xn--ses554g/2020/04/05/RabbitMQ可靠性投递一/&title=《RabbitMQ消息100%可靠性投递的解决方案实现(一)》 — Edward&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://springcloud.xn--ses554g/2020/04/05/RabbitMQ可靠性投递一/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《RabbitMQ消息100%可靠性投递的解决方案实现(一)》 — Edward&url=http://springcloud.xn--ses554g/2020/04/05/RabbitMQ可靠性投递一/&via=http://springcloud.xn--ses554g" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://springcloud.xn--ses554g/2020/04/05/RabbitMQ可靠性投递一/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACpElEQVR42u3aQZIiMQwEwPn/p3evexiaKstiOSQnIuimnSbCEpJ+fuLXn+D1fOW/n7765uSJPxsvPDw8vKtLzx/2zHh1Zbu2fM14eHh427znRZwtKL+3DR7JmvHw8PC+jTfP3ze2DA8PD+87efn7vCSRMPDw8PC+jZcvqC0KvLr+udyQsC/XWvDw8PBiXpv+fsP7lf4eHh4e3qWBgOdD+XkL2rBxebV4eHh4Wwdh0aBKirlJAt2OI+TpMh4eHt42b16GyLcgDwxJKIpGvvDw8PAWeO3h24aHtqSbBI96+AAPDw/vg7ykKXXW8p9sRx5y8PDw8LZ5Z3/+24e1xYgLnT08PDy8Zd5Z0WE+RHV3g95UqfHw8PDWeG0ynRcy2vQ9CRIv78XDw8O7ymsbS20q3Ga5ycZFwQAPDw/vg7yW9Lw1G6MDRakXDw8P74O8s+CRb9NZYbdN9PHw8PD2eEmT6ay1n5eGV4au8PDw8JZ586M835R8BCFJ6A87e3h4eHhHvEmKfHhYx/g8kLxZOR4eHt4y76zV1N41KYLUw154eHh4C7y22T9vZSVhpp0dq0l4eHh4R7y2ONsWAtpPJyn7L9+Dh4eHt8ablHTzR07KE4fhBA8PD2+BlyMnRdv5KNUkicfDw8Pb5rXzS207v62IJGHgTfjBw8PDW+MlB3dSmGiT4PyaYlwADw8P77/y2kP8LEWedO3eXIOHh4d3lTdPiyd3tcutfwA8PDy8Bd7k0I9KqMGnbTp+VtTAw8PDu8ubH+uTUkI+rJC34n5pgOHh4eEt8JLmU3LcTwq+d8MYHh4e3vfw8gGsHNOOcxUDBHh4eHhfxsvZbZi5FmDw8PDw1nj5V58Vf/Nr8qZaERjw8PDwrvLav/dtSfeMPS8B4+Hh4S3w/gKyC16TLn3K3gAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false}});</script></body>
+</html>
