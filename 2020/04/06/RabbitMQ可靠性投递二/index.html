@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>RabbitMQ消息100%可靠性投递的解决方案实现(二) | Edward</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="学习,RabbitMQ">
+    <meta name="description" content="消费端自定义监听继承DefaultConsumer，重写handleDelivery()方法 123456789101112131415161718192021222324252627public class Producer &amp;#123;    public static final String MQ_HOST = &amp;quot;192.168.222.101&amp;quot;;    public">
+<meta name="keywords" content="学习,RabbitMQ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RabbitMQ消息100%可靠性投递的解决方案实现(二)">
+<meta property="og:url" content="http://springcloud.xn--ses554g/2020/04/06/RabbitMQ可靠性投递二/index.html">
+<meta property="og:site_name" content="Edward">
+<meta property="og:description" content="消费端自定义监听继承DefaultConsumer，重写handleDelivery()方法 123456789101112131415161718192021222324252627public class Producer &amp;#123;    public static final String MQ_HOST = &amp;quot;192.168.222.101&amp;quot;;    public">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/20181208233912317.png">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/20181208233919790.png">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/20181208233930617.png">
+<meta property="og:image" content="http://springcloud.xn--ses554g/img/20181208233938534.png">
+<meta property="og:updated_time" content="2020-04-06T07:47:21.162Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RabbitMQ消息100%可靠性投递的解决方案实现(二)">
+<meta name="twitter:description" content="消费端自定义监听继承DefaultConsumer，重写handleDelivery()方法 123456789101112131415161718192021222324252627public class Producer &amp;#123;    public static final String MQ_HOST = &amp;quot;192.168.222.101&amp;quot;;    public">
+<meta name="twitter:image" content="http://springcloud.xn--ses554g/img/20181208233912317.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Edward" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https'){
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else{
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand" style="padding-top: 30%;">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/123.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Edward</h5>
+          <a href="mailto:zqmssbd@qq.com" title="zqmssbd@qq.com" class="mail">zqmssbd@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/zqmssbd" target="_blank">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/5333276247" target="_blank">
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+          
+            <li class="waves-block waves-effect">
+              <a href="https://gitee.com/Edward-Z" target="_blank">
+                <i class="icon icon-lg icon-link"></i>
+                码云
+              </a>
+            </li>
+          
+      </ul>
+        <div id="tp-weather-widget"></div>
+        <script>
+            (function(a,h,g,f,e,d,c,b){b=function(){d=h.createElement(g);c=h.getElementsByTagName(g)[0];d.src=e;d.charset="utf-8";d.async=1;c.parentNode.insertBefore(d,c)};a["SeniverseWeatherWidgetObject"]=f;a[f]||(a[f]=function(){(a[f].q=a[f].q||[]).push(arguments)});a[f].l=+new Date();if(a.attachEvent){a.attachEvent("onload",b)}else{a.addEventListener("load",b,false)}}(window,document,"script","SeniverseWeatherWidget","//cdn.sencdn.com/widget2/static/js/bundle.js?t="+parseInt((new Date().getTime() / 100000000).toString(),10)));
+            window.SeniverseWeatherWidget('show', {
+                flavor: "bubble",
+                location: "WT3Q0FW9ZJ3Q",
+                geolocation: true,
+                language: "zh-Hans",
+                unit: "c",
+                theme: "auto",
+                token: "74eabe8a-0b6b-4a56-86ac-c773a4d98218",
+                hover: "enabled",
+                container: "tp-weather-widget"
+            })
+        </script>
+
+        
+
+
+        
+          <div>
+              <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="240" height="110" loading="lazy" sandbox="allow-popups allow-scripts allow-same-origin" src="//www.xiami.com/webapp/embed-player?auto=0&id=bqvdan93b259"></iframe>
+          </div>
+        
+
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">RabbitMQ消息100%可靠性投递的解决方案实现(二)</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">RabbitMQ消息100%可靠性投递的解决方案实现(二)</h1>
+        <h5 class="title">你真的还不够，不够勤奋和努力。</h5>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-04-06T07:34:05.000Z" itemprop="datePublished" class="page-time">
+  2020-04-06
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/">技术文章</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/RabbitMQ/">RabbitMQ</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/RabbitMQ/中间件/">中间件</a></li></ul></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https'){
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else{
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#消费端自定义监听"><span class="post-toc-number">1.</span> <span class="post-toc-text">消费端自定义监听</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#消息的限流"><span class="post-toc-number">2.</span> <span class="post-toc-text">消息的限流</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#解决方案："><span class="post-toc-number">2.1.</span> <span class="post-toc-text">解决方案：</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#消费端的ACK与重回队列"><span class="post-toc-number">3.</span> <span class="post-toc-text">消费端的ACK与重回队列</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#TTL消息"><span class="post-toc-number">4.</span> <span class="post-toc-text">TTL消息</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#死信队列"><span class="post-toc-number">5.</span> <span class="post-toc-text">死信队列</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#消息变成死信的情况"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">消息变成死信的情况</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#死信队列设置"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">死信队列设置</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-RabbitMQ可靠性投递二" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">RabbitMQ消息100%可靠性投递的解决方案实现(二)</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-04-06 15:34:05" datetime="2020-04-06T07:34:05.000Z" itemprop="datePublished">2020-04-06</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/">技术文章</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/RabbitMQ/">RabbitMQ</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/技术文章/RabbitMQ/中间件/">中间件</a></li></ul></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="消费端自定义监听"><a href="#消费端自定义监听" class="headerlink" title="消费端自定义监听"></a>消费端自定义监听</h1><p>继承DefaultConsumer，重写handleDelivery()方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public class Producer &#123;</span><br><span class="line">    public static final String MQ_HOST = &quot;192.168.222.101&quot;;</span><br><span class="line">    public static final String MQ_VHOST = &quot;/&quot;;</span><br><span class="line">    public static final int MQ_PORT = 5672;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException, TimeoutException &#123;</span><br><span class="line">        //1. 创建一个ConnectionFactory</span><br><span class="line">        ConnectionFactory connectionFactory = new ConnectionFactory();</span><br><span class="line">        connectionFactory.setHost(MQ_HOST);//配置host</span><br><span class="line">        connectionFactory.setPort(MQ_PORT);//配置port</span><br><span class="line">        connectionFactory.setVirtualHost(MQ_VHOST);//配置vHost</span><br><span class="line"></span><br><span class="line">        //2. 通过连接工厂创建连接</span><br><span class="line">        Connection connection = connectionFactory.newConnection();</span><br><span class="line">        //3. 通过connection创建一个Channel</span><br><span class="line">        Channel channel = connection.createChannel();</span><br><span class="line">        String exchange = &quot;test_consumer_exchange&quot;;</span><br><span class="line">        String routingKey = &quot;consumer.save&quot;;</span><br><span class="line"></span><br><span class="line">        //4. 通过Channel发送数据</span><br><span class="line">        String message = &quot;Hello Consumer Message&quot;;</span><br><span class="line"></span><br><span class="line">        for (int i = 0; i &lt; 5; i++) &#123;</span><br><span class="line">            channel.basicPublish(exchange,routingKey,null,message.getBytes());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">public class Consumer &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        Connection connection = ConnectionUtil.getConn();</span><br><span class="line"></span><br><span class="line">        //1. 通过connection创建一个Channel</span><br><span class="line">        Channel channel = connection.createChannel();</span><br><span class="line"></span><br><span class="line">        String exchange = &quot;test_consumer_exchange&quot;;</span><br><span class="line">        String routingKey = &quot;consumer.save&quot;;</span><br><span class="line">        String queueName = &quot;test_consumer_queue&quot;;</span><br><span class="line"></span><br><span class="line">        //2. 声明一个exchange</span><br><span class="line">        channel.exchangeDeclare(exchange,&quot;topic&quot;,true,false,null);</span><br><span class="line">        //3. 声明一个队列</span><br><span class="line">        channel.queueDeclare(queueName,true,false,false,null);</span><br><span class="line">        //4. 绑定</span><br><span class="line">        channel.queueBind(queueName,exchange,routingKey);</span><br><span class="line">        //5. 创建消费者</span><br><span class="line">        QueueingConsumer queueingConsumer = new QueueingConsumer(channel);</span><br><span class="line">        //6. 设置Channel</span><br><span class="line">        channel.basicConsume(queueName,true,new MyConsumer(channel));</span><br><span class="line">       /* //7. 获取消息</span><br><span class="line">       之前的方式，很ugly</span><br><span class="line">        while (true) &#123;</span><br><span class="line">            //nextDelivery 会阻塞直到有消息过来</span><br><span class="line">            QueueingConsumer.Delivery delivery = queueingConsumer.nextDelivery();</span><br><span class="line">            String message = new String(delivery.getBody());</span><br><span class="line">            System.out.println(&quot;收到:&quot; + message);</span><br><span class="line">        &#125;*/</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static class MyConsumer extends DefaultConsumer &#123;</span><br><span class="line">        public MyConsumer(Channel channel) &#123;</span><br><span class="line">            super(channel);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException &#123;</span><br><span class="line">            System.out.println(&quot;——consume message——&quot;);</span><br><span class="line">            System.out.println(&quot;consumerTag:&quot;+consumerTag);</span><br><span class="line">            System.out.println(&quot;envelope:&quot;+envelope);</span><br><span class="line">            System.out.println(&quot;properties:&quot;+properties);</span><br><span class="line">            System.out.println(&quot;body:&quot;+new String(body));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>打印如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">——consume message——</span><br><span class="line">consumerTag:amq.ctag-DLKq_dy8aYspCTUBrnHTew</span><br><span class="line">envelope:Envelope(deliveryTag=1, redeliver=false, exchange=test_consumer_exchange, routingKey=consumer.save)</span><br><span class="line">properties:#contentHeader&lt;basic&gt;(content-type=null, content-encoding=null, headers=null, delivery-mode=null, priority=null, correlation-id=null, reply-to=null, expiration=null, message-id=null, timestamp=null, type=null, user-id=null, app-id=null, cluster-id=null)</span><br><span class="line">body:Hello Consumer Message</span><br><span class="line">——consume message——</span><br><span class="line">consumerTag:amq.ctag-DLKq_dy8aYspCTUBrnHTew</span><br><span class="line">envelope:Envelope(deliveryTag=2, redeliver=false, exchange=test_consumer_exchange, routingKey=consumer.save)</span><br><span class="line">properties:#contentHeader&lt;basic&gt;(content-type=null, content-encoding=null, headers=null, delivery-mode=null, priority=null, correlation-id=null, reply-to=null, expiration=null, message-id=null, timestamp=null, type=null, user-id=null, app-id=null, cluster-id=null)</span><br><span class="line">body:Hello Consumer Message</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<h1 id="消息的限流"><a href="#消息的限流" class="headerlink" title="消息的限流"></a>消息的限流</h1><p>假设，MQ服务器上有上万条未处理的消息，随便打开一个消费者客户端，会出现下面情况：<br>巨量的消息瞬间全部推送过来，但是单个客户端无法同时处理这么多数据，从而导致服务器崩溃</p>
+<h2 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h2><ul>
+<li>RabbitMQ提供了一种qos(服务质量保证)功能，即在非自动确认消息的前提下(设置autoAck为false)，若一定数量的消息(通过基于consume或channel设置Qos的值)未被确认前，不消费新的消息</li>
+</ul>
+<p><strong>void BasicQos(unit prefetchSize,unshort prefetchCount,bool global)</strong></p>
+<ul>
+<li>prefetchSize：0 消费的单条消息的大小限制，0代表不限制</li>
+<li>prefetchCount：不要同时给一个消费者推送多于N个消息，即一旦有N个消息还没有ack，则该consumer将block掉，直到有消息ack</li>
+<li>global：true\false true:上面设置应用于channel级别; false:应用于consumer级别</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">public class Producer &#123;</span><br><span class="line">    public static final String MQ_HOST = &quot;192.168.222.101&quot;;</span><br><span class="line">    public static final String MQ_VHOST = &quot;/&quot;;</span><br><span class="line">    public static final int MQ_PORT = 5672;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException, TimeoutException &#123;</span><br><span class="line">        //1. 创建一个ConnectionFactory</span><br><span class="line">        ConnectionFactory connectionFactory = new ConnectionFactory();</span><br><span class="line">        connectionFactory.setHost(MQ_HOST);//配置host</span><br><span class="line">        connectionFactory.setPort(MQ_PORT);//配置port</span><br><span class="line">        connectionFactory.setVirtualHost(MQ_VHOST);//配置vHost</span><br><span class="line"></span><br><span class="line">        //2. 通过连接工厂创建连接</span><br><span class="line">        Connection connection = connectionFactory.newConnection();</span><br><span class="line">        //3. 通过connection创建一个Channel</span><br><span class="line">        Channel channel = connection.createChannel();</span><br><span class="line">        String exchange = &quot;test_qos_exchange&quot;;</span><br><span class="line">        String routingKey = &quot;qos.save&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        //4. 通过Channel发送数据</span><br><span class="line">        String message = &quot;Hello Qos Message&quot;;</span><br><span class="line"></span><br><span class="line">        for (int i = 0; i &lt; 5; i++) &#123;</span><br><span class="line">            channel.basicPublish(exchange,routingKey,null,message.getBytes());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">public class Consumer &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        Connection connection = ConnectionUtil.getConn();</span><br><span class="line"></span><br><span class="line">        //1. 通过connection创建一个Channel</span><br><span class="line">        Channel channel = connection.createChannel();</span><br><span class="line"></span><br><span class="line">        String exchange = &quot;test_qos_exchange&quot;;</span><br><span class="line">        String routingKey = &quot;qos.#&quot;;</span><br><span class="line">        String queueName = &quot;test_qos_queue&quot;;</span><br><span class="line"></span><br><span class="line">        //2. 声明一个exchange</span><br><span class="line">        channel.exchangeDeclare(exchange,&quot;topic&quot;,true,false,null);</span><br><span class="line">        //3. 声明一个队列</span><br><span class="line">        channel.queueDeclare(queueName,true,false,false,null);</span><br><span class="line">        //4. 绑定</span><br><span class="line">        channel.queueBind(queueName,exchange,routingKey);</span><br><span class="line">        //5. 创建消费者</span><br><span class="line">        QueueingConsumer queueingConsumer = new QueueingConsumer(channel);</span><br><span class="line">        //6.限流方式 每次只推3条</span><br><span class="line">        channel.basicQos(0,3,false);</span><br><span class="line">        //7. 设置Channel autoAck一定要设置为false，才能做限流</span><br><span class="line">        channel.basicConsume(queueName,false,new MyConsumer(channel));</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static class MyConsumer extends DefaultConsumer &#123;</span><br><span class="line">        private Channel channel;</span><br><span class="line">        public MyConsumer(Channel channel) &#123;</span><br><span class="line">            super(channel);</span><br><span class="line">            this.channel = channel;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException &#123;</span><br><span class="line">            System.out.println(&quot;——consume message——&quot;);</span><br><span class="line">            System.out.println(&quot;consumerTag:&quot;+consumerTag);</span><br><span class="line">            System.out.println(&quot;envelope:&quot;+envelope);</span><br><span class="line">            System.out.println(&quot;properties:&quot;+properties);</span><br><span class="line">            System.out.println(&quot;body:&quot;+new String(body));</span><br><span class="line">            // 手动签收</span><br><span class="line">            channel.basicAck(envelope.getDeliveryTag(),false);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="消费端的ACK与重回队列"><a href="#消费端的ACK与重回队列" class="headerlink" title="消费端的ACK与重回队列"></a>消费端的ACK与重回队列</h1><p>消费端可以进行手工ACK和NACK(不确认，表示失败)</p>
+<ul>
+<li>消费端进行消费时，如果由于业务异常，可以进行日志记录，然后进行补偿</li>
+<li>如果由于服务器宕机等严重问题，需要手工进行ACK保障消费端消费成功</li>
+</ul>
+<p>消费端的重回队列：</p>
+<p>对没有处理成功的消息，把消息重新传递给Broker<br>一般在实际应用中，会关闭重回队列</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public class Producer &#123;</span><br><span class="line">    public static final String MQ_HOST = &quot;192.168.222.101&quot;;</span><br><span class="line">    public static final String MQ_VHOST = &quot;/&quot;;</span><br><span class="line">    public static final int MQ_PORT = 5672;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException, TimeoutException &#123;</span><br><span class="line">        //1. 创建一个ConnectionFactory</span><br><span class="line">        ConnectionFactory connectionFactory = new ConnectionFactory();</span><br><span class="line">        connectionFactory.setHost(MQ_HOST);//配置host</span><br><span class="line">        connectionFactory.setPort(MQ_PORT);//配置port</span><br><span class="line">        connectionFactory.setVirtualHost(MQ_VHOST);//配置vHost</span><br><span class="line"></span><br><span class="line">        //2. 通过连接工厂创建连接</span><br><span class="line">        Connection connection = connectionFactory.newConnection();</span><br><span class="line">        //3. 通过connection创建一个Channel</span><br><span class="line">        Channel channel = connection.createChannel();</span><br><span class="line">        String exchange = &quot;test_ack_exchange&quot;;</span><br><span class="line">        String routingKey = &quot;ack.save&quot;;</span><br><span class="line"></span><br><span class="line">        //4. 通过Channel发送数据</span><br><span class="line">        String message = &quot;Hello Ack Message&quot;;</span><br><span class="line"></span><br><span class="line">        for (int i = 0; i &lt; 5; i++) &#123;</span><br><span class="line">            Map&lt;String,Object&gt; headers = new HashMap&lt;&gt;();</span><br><span class="line">            headers.put(&quot;num&quot;,i);</span><br><span class="line">            AMQP.BasicProperties properties = new AMQP.BasicProperties().builder()</span><br><span class="line">                    .deliveryMode(2) //持久化</span><br><span class="line">                    .contentEncoding(&quot;UTF-8&quot;)</span><br><span class="line">                    .headers(headers)</span><br><span class="line">                    .build();</span><br><span class="line">            channel.basicPublish(exchange,routingKey,properties,message.getBytes());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">public class Consumer &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        Connection connection = ConnectionUtil.getConn();</span><br><span class="line"></span><br><span class="line">        //1. 通过connection创建一个Channel</span><br><span class="line">        Channel channel = connection.createChannel();</span><br><span class="line"></span><br><span class="line">        String exchange = &quot;test_ack_exchange&quot;;</span><br><span class="line">        String routingKey = &quot;ack.#&quot;;</span><br><span class="line">        String queueName = &quot;test_ack_queue&quot;;</span><br><span class="line"></span><br><span class="line">        //2. 声明一个exchange</span><br><span class="line">        channel.exchangeDeclare(exchange,&quot;topic&quot;,true,false,null);</span><br><span class="line">        //3. 声明一个队列</span><br><span class="line">        channel.queueDeclare(queueName,true,false,false,null);</span><br><span class="line">        //4. 绑定</span><br><span class="line">        channel.queueBind(queueName,exchange,routingKey);</span><br><span class="line">        //5. autoAck = false</span><br><span class="line">        channel.basicConsume(queueName,false,new MyConsumer(channel));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static class MyConsumer extends DefaultConsumer &#123;</span><br><span class="line">        private Channel channel;</span><br><span class="line">        public MyConsumer(Channel channel) &#123;</span><br><span class="line">            super(channel);</span><br><span class="line">            this.channel = channel;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException &#123;</span><br><span class="line">            System.out.println(&quot;——consume message——&quot;);</span><br><span class="line">            System.out.println(&quot;body:&quot;+new String(body));</span><br><span class="line">            System.out.println(&quot;num:&quot; + properties.getHeaders().get(&quot;num&quot;));</span><br><span class="line">            if ((Integer)properties.getHeaders().get(&quot;num&quot;) == 0 ) &#123;</span><br><span class="line">                //requeue:true表示重新入队，重传</span><br><span class="line">                channel.basicNack(envelope.getDeliveryTag(),false,true);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                channel.basicAck(envelope.getDeliveryTag(),false);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">——consume message——</span><br><span class="line">body:Hello Ack Message</span><br><span class="line">num:0</span><br><span class="line">——consume message——</span><br><span class="line">body:Hello Ack Message</span><br><span class="line">num:0</span><br><span class="line">——consume message——</span><br><span class="line">body:Hello Ack Message</span><br><span class="line">num:0</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>num为0的消息会一直回到MQ队列的最尾端，然后一直循环打印，因为一直无法消费</p>
+<h1 id="TTL消息"><a href="#TTL消息" class="headerlink" title="TTL消息"></a>TTL消息</h1><ul>
+<li>生存时间(Time to Live,TTL)，指的是消息的生成时间</li>
+<li>RabbitMQ支持消息的过期时间，在消息发送时可以进行指定</li>
+<li>还支持队列的过期时间，从消息入队列开始计时，只要超过了队列的超时时间，那么消息会自动的清除</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">AMQP.BasicProperties properties = new AMQP.BasicProperties.Builder()</span><br><span class="line">                .deliveryMode(2) //2:持久化投递；1:非持久化(未消费的消息重启后就没了)</span><br><span class="line">                .contentEncoding(&quot;UTF-8&quot;)</span><br><span class="line">                .expiration(&quot;5000&quot;)//5s 设置消息的TTL</span><br><span class="line">                .headers(headers)</span><br><span class="line">                .build();</span><br><span class="line">      </span><br><span class="line">            String message = &quot;Hello&quot;;</span><br><span class="line">            channel.basicPublish(&quot;&quot;,&quot;testQueue&quot;,properties,message.getBytes());</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>队列TTL：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, Object&gt; args = new HashMap&lt;&gt;();  </span><br><span class="line">args.put(&quot;x-expires&quot;, 1800000);  //30分钟</span><br><span class="line">channel.queueDeclare(&quot;myqueue&quot;, false, false, false, args);</span><br></pre></td></tr></table></figure></p>
+<h1 id="死信队列"><a href="#死信队列" class="headerlink" title="死信队列"></a>死信队列</h1><ul>
+<li>死信队列(Dead-Letter-Exchange,DLX)</li>
+<li>利用DLX，当消息在队列中变成死信(dead message:没有消费者去消费)之后，它能被重新publish到另一个Exchange，这个Exchange就是死信队列</li>
+<li>DLX是一个正常的Exchange，和一般的Exchange没有区别，它能在任何的队列上被指定</li>
+<li>当这个队列中有死信时，RabbitMQ就会自动的将这个消息重新发布到设置的Exchange上，进而被路由到另一个队列</li>
+<li>可以监听这个队列中的消息并做相应的处理</li>
+</ul>
+<h2 id="消息变成死信的情况"><a href="#消息变成死信的情况" class="headerlink" title="消息变成死信的情况"></a>消息变成死信的情况</h2><ol>
+<li>消息被拒绝(basic.rejcet/basic.nack)且requeue=false</li>
+<li>消息TTL过期</li>
+<li>队列达到最大长度</li>
+</ol>
+<p><a href="https://mp.weixin.qq.com/s/jbCZ9zMvOtBR2xNB4gtOHg" target="_blank" rel="noopener">消息中间件消费到的消息处理失败怎么办？</a></p>
+<p>专门有一个后台线程，监控消费者(如 物流）系统是否正常，能否请求的，不停的监视。<br>一旦发现消费者系统恢复正常，这个后台线程就从死信队列中取出 消费处理失败的消息，重新执行相应逻辑。</p>
+<h2 id="死信队列设置"><a href="#死信队列设置" class="headerlink" title="死信队列设置"></a>死信队列设置</h2><ol>
+<li>首先要设置死信队列的exchange和queue，然后进行绑定：<ul>
+<li>Exchange：dlx.exchange</li>
+<li>Queue：dlx.queue</li>
+<li>RoutingKey：#</li>
+</ul>
+</li>
+<li>进行正常声明交换机、队列、绑定，只不过需要在队列上加上一个参数：<strong>（consumer里添加）arguments.put(“x-dead-letter-exchange”,”dlx.exchange);</strong></li>
+<li>消息在过期、requeue、队列达到最大长度时，消息就可以直接路由到死信队列</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">public class Producer &#123;</span><br><span class="line">    public static final String MQ_HOST = &quot;192.168.222.101&quot;;</span><br><span class="line">    public static final String MQ_VHOST = &quot;/&quot;;</span><br><span class="line">    public static final int MQ_PORT = 5672;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException, TimeoutException &#123;</span><br><span class="line">        //1. 创建一个ConnectionFactory</span><br><span class="line">        ConnectionFactory connectionFactory = new ConnectionFactory();</span><br><span class="line">        connectionFactory.setHost(MQ_HOST);//配置host</span><br><span class="line">        connectionFactory.setPort(MQ_PORT);//配置port</span><br><span class="line">        connectionFactory.setVirtualHost(MQ_VHOST);//配置vHost</span><br><span class="line"></span><br><span class="line">        //2. 通过连接工厂创建连接</span><br><span class="line">        Connection connection = connectionFactory.newConnection();</span><br><span class="line">        //3. 通过connection创建一个Channel</span><br><span class="line">        Channel channel = connection.createChannel();</span><br><span class="line">        String exchange = &quot;test_dlx_exchange&quot;;</span><br><span class="line">        String routingKey = &quot;dlx.save&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        //4. 通过Channel发送数据</span><br><span class="line">        String message = &quot;Hello DLX Message&quot;;</span><br><span class="line"></span><br><span class="line">        AMQP.BasicProperties properties = new AMQP.BasicProperties.Builder()</span><br><span class="line">                .deliveryMode(2) //2:持久化投递；1:非持久化(未消费的消息重启后就没了)</span><br><span class="line">                .contentEncoding(&quot;UTF-8&quot;)</span><br><span class="line">                .expiration(&quot;5000&quot;)//5s后如果没有消费端消费，会变成死信</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        for (int i = 0; i &lt; 1; i++) &#123;</span><br><span class="line">            channel.basicPublish(exchange,routingKey,properties,message.getBytes());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">public class Consumer &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        Connection connection = ConnectionUtil.getConn();</span><br><span class="line"></span><br><span class="line">        //1. 通过connection创建一个Channel</span><br><span class="line">        Channel channel = connection.createChannel();</span><br><span class="line"></span><br><span class="line">        String exchange = &quot;test_dlx_exchange&quot;;</span><br><span class="line">        String routingKey = &quot;dlx.#&quot;;</span><br><span class="line">        String queueName = &quot;test_dlx_queue&quot;;</span><br><span class="line"></span><br><span class="line">        String dlxExchange = &quot;dlx.exchange&quot;;</span><br><span class="line">        String dlxQueue = &quot;dlx.queue&quot;;</span><br><span class="line"></span><br><span class="line">        //2. 声明一个exchange</span><br><span class="line">        channel.exchangeDeclare(exchange,&quot;topic&quot;,true,false,null);</span><br><span class="line">        Map&lt;String,Object&gt; arguments = new HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        //路由失败，重发到dlx.exchange</span><br><span class="line">        arguments.put(&quot;x-dead-letter-exchange&quot;,dlxExchange);</span><br><span class="line">        /**</span><br><span class="line">         * 声明正常队列</span><br><span class="line">         * arguments要设置到声明队列上</span><br><span class="line">         */</span><br><span class="line">        channel.queueDeclare(queueName,true,false,false,arguments);</span><br><span class="line">        channel.queueBind(queueName,exchange,routingKey);</span><br><span class="line"></span><br><span class="line">        //进行死信队列的声明</span><br><span class="line">        channel.exchangeDeclare(dlxExchange,&quot;topic&quot;,true,false,null);</span><br><span class="line">        channel.queueDeclare(dlxQueue,true,false,false,null);</span><br><span class="line">        channel.queueBind(dlxQueue,dlxExchange,&quot;#&quot;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static class MyConsumer extends DefaultConsumer &#123;</span><br><span class="line">        public MyConsumer(Channel channel) &#123;</span><br><span class="line">            super(channel);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException &#123;</span><br><span class="line">            System.out.println(&quot;——consume message——&quot;);</span><br><span class="line">            System.out.println(&quot;body:&quot;+new String(body));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>先启动Consumer,进行生成队列等操作</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/20181208233912317.png" alt="exchange" title="">
+                </div>
+                <div class="image-caption">exchange</div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/20181208233919790.png" alt="queue" title="">
+                </div>
+                <div class="image-caption">queue</div>
+            </figure>
+<p>接着，为了让消息变成死信，停止Consumer</p>
+<p>最后，启动Producer</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/20181208233930617.png" alt="queue" title="">
+                </div>
+                <div class="image-caption">queue</div>
+            </figure>
+<p>5秒后，消息没被消费，然后就进去了死信队列(注意死信队列中初始值是1)<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/20181208233938534.png" alt="queue" title="">
+                </div>
+                <div class="image-caption">queue</div>
+            </figure></p>
+<p><a href="https://blog.csdn.net/yjw123456/article/details/84900667" target="_blank" rel="noopener">转自：RabbitMQ学习——高级特性</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-04-06T07:47:21.162Z" itemprop="dateUpdated">2020-04-06 15:47:21</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://springcloud.xn--ses554g">
+            <img src="/img/123.png" alt="Edward">
+            Edward
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RabbitMQ/">RabbitMQ</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/学习/">学习</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://springcloud.xn--ses554g/2020/04/06/RabbitMQ可靠性投递二/&title=《RabbitMQ消息100%可靠性投递的解决方案实现(二)》 — Edward&pic=http://springcloud.xn--ses554g/img/123.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://springcloud.xn--ses554g/2020/04/06/RabbitMQ可靠性投递二/&title=《RabbitMQ消息100%可靠性投递的解决方案实现(二)》 — Edward&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://springcloud.xn--ses554g/2020/04/06/RabbitMQ可靠性投递二/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《RabbitMQ消息100%可靠性投递的解决方案实现(二)》 — Edward&url=http://springcloud.xn--ses554g/2020/04/06/RabbitMQ可靠性投递二/&via=http://springcloud.xn--ses554g" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://springcloud.xn--ses554g/2020/04/06/RabbitMQ可靠性投递二/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/04/06/iframe嵌入BiliBili视频方法B站视频外链/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">iframe嵌入BiliBili视频方法B站视频外链</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "NHOU6qcrdobSwD5wwUJJ31pQ-gzGzoHsz",
+            appKey: "E0RJgPMPwkjfMBOA88EalSzJ",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv">
+        站点总访客数：30<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv">
+        站点总访问量：425<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Edward &copy; 2015 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://springcloud.xn--ses554g/2020/04/06/RabbitMQ可靠性投递二/&title=《RabbitMQ消息100%可靠性投递的解决方案实现(二)》 — Edward&pic=http://springcloud.xn--ses554g/img/123.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://springcloud.xn--ses554g/2020/04/06/RabbitMQ可靠性投递二/&title=《RabbitMQ消息100%可靠性投递的解决方案实现(二)》 — Edward&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://springcloud.xn--ses554g/2020/04/06/RabbitMQ可靠性投递二/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《RabbitMQ消息100%可靠性投递的解决方案实现(二)》 — Edward&url=http://springcloud.xn--ses554g/2020/04/06/RabbitMQ可靠性投递二/&via=http://springcloud.xn--ses554g" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://springcloud.xn--ses554g/2020/04/06/RabbitMQ可靠性投递二/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACpklEQVR42u3aQZLCMAwEQP7/afYBEBhJFpWt6pyoJSRuH2ztyI9HfD1frt79r7+9eubz4npsXHh4eHjjoV8Nq3fP1Rsn05qMBw8PD2+b93kQn++5WtarmHzzKEwcHh4e3g14n4dbLbur2wMeHh7ef+TlW0VSEOcMPDw8vLvxkgFVf3U1rDzM/cw+nLXg4eHhxbxqQHCHzyv9PTw8PLxxV73ayuo9bdIM+/J8PDw8vLWFcHKIKm/w59ORvzcKkfHw8PCO8uZN+t7U5DFHPqo33+Lh4eEt8PIFOm//55hq7Js34Qqzi4eHhzfmnS2mew2wPMYt9/fw8PDwxrxeiJBMTW/RT8LiUQMMDw8Pb8zLw9Y8gMiH29vHykev8PDw8I7yki1h3hjLQ4o8FI7+joeHh7fGq1InJXiv6VXe6/Dw8PDWePMDAfNCuUfNo148PDy8s7zeslvdMJJJmZfdb96Lh4eHt8abRLS9jSQvuPOwo/AgPDw8vAXepAjOB1ft9ecXHh4e3h4vL3Y3rmrzrDc1eHh4eHu8vCXWW6wn5XtvPHh4eHh7vGoZ3Xvl5DnNQ1d4eHh4C7xegyovc5Oiuddmi96Fh4eHt8CrDrTKmAS4x7YTPDw8vDVeb+HuDbp6lKrXisPDw8P7DS/5cfW4QG9S8m0gSqbx8PDwlnl5nJqEqtWIYX5ICw8PD+83vLPhabVELnft8nvw8PDwjvJOHZmaHD6oHg4obBt4eHh4C7xqKJC3wfJvq+2uXqiBh4eHd5ZXXdaTpbw3u73g+AseDw8Pb43Xi2Lzhf5US6w8TXh4eHg341WbZHlcm29FX0IKPDw8vBvzenFDkhuMNhg8PDy8NV616ZUfIKiGv3krrrAx4OHh4R3lVf+9rx4p6LXT5hEwHh4e3gLvD//b7gP2ziH0AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":false}});</script></body>
+</html>
