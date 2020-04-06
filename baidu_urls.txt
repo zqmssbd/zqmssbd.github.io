@@ -4,7 +4,7 @@ http://springcloud.xn--ses554g/2020/04/05/Rabbitmq的Confirm和Return/
 http://springcloud.xn--ses554g/2020/04/05/RabbitMQ可靠性投递一/
 http://springcloud.xn--ses554g/2020/04/01/常见面试题知识点归档/
 http://springcloud.xn--ses554g/2020/03/31/八大排序算法/
-http://springcloud.xn--ses554g/2020/03/30/分布式Session/
+http://springcloud.xn--ses554g/2020/03/30/三种实现分布式锁的方式/
 http://springcloud.xn--ses554g/2020/03/30/分布式事务/
 http://springcloud.xn--ses554g/2020/03/30/Redis常见面试题目/
 http://springcloud.xn--ses554g/2020/03/30/分布式日志/
