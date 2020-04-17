@@ -31,12 +31,10 @@
 <meta property="og:site_name" content="Edward">
 <meta property="og:description" content="JUC多线程及高并发[TOC] 一、请你谈谈对volatile的理解​    Package java.util.concurrent—&amp;gt; AtomicInteger  Lock ReadWriteLock 1、volatile是java虚拟机提供的轻量级的同步机制保证可见性、不保证原子性、禁止指令重排  保证可见性 当多个线程访问同一个变量时，一个线程修改了这个变量的值，其他线程能够立即看">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://springcloud.xn--ses554g/2020/04/13/JUC多线程及高并发/images/1559049634(1).jpg">
-<meta property="og:updated_time" content="2020-04-17T02:00:29.437Z">
+<meta property="og:updated_time" content="2020-04-17T05:33:14.326Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="周阳-阳哥JUC多线程及高并发部分">
 <meta name="twitter:description" content="JUC多线程及高并发[TOC] 一、请你谈谈对volatile的理解​    Package java.util.concurrent—&amp;gt; AtomicInteger  Lock ReadWriteLock 1、volatile是java虚拟机提供的轻量级的同步机制保证可见性、不保证原子性、禁止指令重排  保证可见性 当多个线程访问同一个变量时，一个线程修改了这个变量的值，其他线程能够立即看">
-<meta name="twitter:image" content="http://springcloud.xn--ses554g/2020/04/13/JUC多线程及高并发/images/1559049634(1).jpg">
     
         <link rel="alternate" type="application/atom+xml" title="Edward" href="/atom.xml">
     
@@ -311,13 +309,7 @@
 <li>线程加锁前，必须读取主内存的最新值到自己的工作内存</li>
 <li>加锁解锁时同一把锁</li>
 </ol>
-<p>由于JVM运行程序的实体是线程，而每个线程创建时JVM都会为其创建一个工作内存（有的成为栈空间），工作内存是每个线程的私有数据区域，而java内存模型中规定所有变量都存储在<strong>==主内存==</strong>，主内存是贡献内存区域，所有线程都可以访问，<strong>==但线程对变量的操作（读取赋值等）必须在工作内存中进行，首先概要将变量从主内存拷贝到自己的工作内存空间，然后对变量进行操作，操作完成后再将变量写回主内存，==</strong>不能直接操作主内存中的变量，各个线程中的工作内存中存储着主内存的<strong>==变量副本拷贝==</strong>，因此不同的线程件无法访问对方的工作内存，线程间的通信（传值）必须通过主内存来完成，期间要访问过程如下图：<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="images\1559049634(1).jpg" alt="1559049634(1)" title="">
-                </div>
-                <div class="image-caption">1559049634(1)</div>
-            </figure></p>
+<p>由于JVM运行程序的实体是线程，而每个线程创建时JVM都会为其创建一个工作内存（有的成为栈空间），工作内存是每个线程的私有数据区域，而java内存模型中规定所有变量都存储在<strong>==主内存==</strong>，主内存是贡献内存区域，所有线程都可以访问，<strong>==但线程对变量的操作（读取赋值等）必须在工作内存中进行，首先概要将变量从主内存拷贝到自己的工作内存空间，然后对变量进行操作，操作完成后再将变量写回主内存，==</strong>不能直接操作主内存中的变量，各个线程中的工作内存中存储着主内存的<strong>==变量副本拷贝==</strong>，因此不同的线程件无法访问对方的工作内存，线程间的通信（传值）必须通过主内存来完成，期间要访问过程如下图：!<em>**</em><a href="/img/1559049634(1"></a>.jpg)</p>
 <ol>
 <li>可见性</li>
 <li>原子性</li>
@@ -823,7 +815,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2020-04-17T02:00:29.437Z" itemprop="dateUpdated">2020-04-17 10:00:29</time>
+    最后更新时间：<time datetime="2020-04-17T05:33:14.326Z" itemprop="dateUpdated">2020-04-17 13:33:14</time>
 </span><br>
 
 
