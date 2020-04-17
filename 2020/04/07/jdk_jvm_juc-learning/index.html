@@ -74,7 +74,7 @@
 <meta property="og:image" content="http://springcloud.xn--ses554g/img/标记-整理算法.png">
 <meta property="og:image" content="http://springcloud.xn--ses554g/img/垃圾回收器分类.png">
 <meta property="og:image" content="http://springcloud.xn--ses554g/img/G1收集器Region.png">
-<meta property="og:updated_time" content="2020-04-13T08:56:57.516Z">
+<meta property="og:updated_time" content="2020-04-13T09:28:05.045Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JUC和JVM">
 <meta name="twitter:description" content="jdk&amp;amp;jvm&amp;amp;juc(部分图源:JavaGuide) java基础知识 Java常见基础知识点 面向对象和面向过程的区别 OracleJdk与OpenJdk的区别 Java与C  的异同 JVM,JDK和JRE的区别 Java语言的特点 面向对象的特征 重载和重写的区别 接口与抽象类的区别 Object类的方法有哪些? 静态属性方法和成员属性方法区别 子类属性与父类属性初始化">
@@ -194,13 +194,14 @@
             })
         </script>
 
+        <!--<link rel="stylesheet" href="https://blog-static.cnblogs.com/files/senup/APlayer.min.css">
+        <div id="player" class="aplayer aplayer-withlist aplayer-fixed" data-id="3895885" data-server="netease" data-type="playlist" data-order="random" data-fixed="true" data-listfolded="true" data-theme="#2D8CF0"></div>
+        <script src="https://blog-static.cnblogs.com/files/senup/APlayer.min.js"></script>
+        <script src="https://blog-static.cnblogs.com/files/senup/Meting.min.js"></script>-->
+
         
 
 
-        
-          <div>
-              <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="240" height="110" loading="lazy" sandbox="allow-popups allow-scripts allow-same-origin" src="//www.xiami.com/webapp/embed-player?auto=0&id=bqvdan93b259"></iframe>
-          </div>
         
 
     </div>
@@ -1695,11 +1696,18 @@
 <h4 id="引用计数法缺点"><a href="#引用计数法缺点" class="headerlink" title="引用计数法缺点"></a>引用计数法缺点</h4><p>引用计数的主要缺陷是很难解决循环引用的问题:<br>也就是当2个对象互相引用的时候,除了彼此,<br>没有其他地方引用这2个对象,那么他们的引用计数都为1,就无法被回收。      </p>
 <h4 id="什么是GC-Root"><a href="#什么是GC-Root" class="headerlink" title="什么是GC Root ?"></a>什么是GC Root ?</h4><p>上面说通过GC Root对象搜索引用链,那么GC Root对象是什么对象,<br>或者说什么样的对象是GC Root对象。<br>可以作为GC Root对象的有: </p>
 <ol>
-<li>虚拟机栈和本地方法栈区(native)中的引用对象(common object)</li>
-<li>方法区中类的静态属性引用的对象(static)</li>
-<li>方法区中的常量引用的对象(final)   </li>
+<li>虚拟机栈（栈帧中的局部变量区，也叫局部变量表）中应用的对象。</li>
+<li>方法区中的类静态属性引用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>本地方法栈中JNI（native方法）引用的对象</li>
 </ol>
-<p><img src="/img/可达性算法.png" alt="可达性算法">      </p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/img/可达性算法.png" alt="可达性算法" title="">
+                </div>
+                <div class="image-caption">可达性算法</div>
+            </figure>      
 <h3 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h3><p>常见的垃圾回收算法主要有以下4种:</p>
 <ol>
 <li>复制算法</li>
@@ -1863,7 +1871,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2020-04-13T08:56:57.516Z" itemprop="dateUpdated">2020-04-13 16:56:57</time>
+    最后更新时间：<time datetime="2020-04-13T09:28:05.045Z" itemprop="dateUpdated">2020-04-13 17:28:05</time>
 </span><br>
 
 
