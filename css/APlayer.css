@@ -62,7 +62,7 @@
 }
 
 .aplayer.aplayer-narrow .aplayer-body, .aplayer.aplayer-narrow .aplayer-pic {
-    height: 66px;
+    height: 70px;
     width: 66px
 }
 
@@ -230,7 +230,7 @@
 .aplayer .aplayer-pic {
     position: relative;
     float: left;
-    height: 66px;
+    height: 70px;
     width: 66px;
     background-size: cover;
     background-position: 50%;
